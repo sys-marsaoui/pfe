@@ -2,9 +2,11 @@ package com.rgi.hiring.accountManagement.security;
 
 
 import com.rgi.hiring.accountManagement.modals.User;
+import com.rgi.hiring.accountManagement.repository.TokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +31,12 @@ public class JwtService {
     private long refreshTokenExpire;
 
 
+    private final TokenRepository tokenRepository;
+
+    public JwtService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
     private final  String SECRET_Key = "7a63b70ef734388acf077399e27617734c778ef4ff63902cdbd4302a96034e23";
 
 
@@ -40,13 +48,23 @@ public class JwtService {
     public boolean isValid(String token, UserDetails user) {
         String username = extractUsername(token);
 
-//        boolean validToken = tokenRepository
-//                .findByAccessToken(token)
-//                .map(t -> !t.isLoggedOut())
-//                .orElse(false);
+        boolean validToken = tokenRepository
+                .findByAccessToken(token)
+                .map(t -> !t.isLoggedOut())
+                .orElse(false);
+        return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
+    }
 
-       // return (username.equals(user.getUsername())) && !isTokenExpired(token) && validToken;
-        return (username.equals(user.getUsername())) && !isTokenExpired(token);
+
+    public boolean isValidRefreshToken(String token, User user) {
+        String username = extractUsername(token);
+
+        boolean validRefreshToken = tokenRepository
+                .findByRefreshToken(token)
+                .map(t -> !t.isLoggedOut())
+                .orElse(false);
+
+        return (username.equals(user.getUsername())) && !isTokenExpired(token) && validRefreshToken;
     }
 
     private boolean isTokenExpired(String token) {

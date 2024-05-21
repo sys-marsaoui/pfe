@@ -4,6 +4,8 @@ package com.rgi.hiring.accountManagement.controllers;
 import com.rgi.hiring.accountManagement.modals.User;
 import com.rgi.hiring.accountManagement.payload.AuthenticationResponse;
 import com.rgi.hiring.accountManagement.service.impl.AuthenticationService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +36,13 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
-
+    @PostMapping("/refresh_token")
+    public ResponseEntity refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        return authService.refreshToken(request, response);
+    }
 
 
 
