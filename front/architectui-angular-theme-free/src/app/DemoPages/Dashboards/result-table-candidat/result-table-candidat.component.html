@@ -1,0 +1,112 @@
+<app-page-title [heading]="heading" [subheading]="subheading" [icon]="icon"></app-page-title>
+<div class="main-card mb-3 card">
+  <div class="card-header">
+    <div class="card-header-title font-size-lg text-capitalize fw-normal">
+      Suivi des candidatures
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+      <thead>
+        <tr>
+          <th class="text-center">Nom et Prénom</th>
+          <th class="text-center">Résultat</th>
+          <th class="text-center">Statut</th>
+          <th class="text-center">Date de passage</th>
+          <th class="text-center">Target Achievement</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let candidat of candidats">
+          <td class="text-center">{{ candidat.nom }}</td>
+          <td class="text-center">{{ candidat.resultat }}</td>
+          <td class="text-center">
+            <div
+              class="badge rounded-pill"
+              [ngClass]="{
+                'bg-warning': candidat.statut === 'À traiter',
+                'bg-success': candidat.statut === 'Accepté',
+                'bg-danger': candidat.statut === 'Rejeté'
+              }"
+            >
+              {{ candidat.statut }}
+            </div>
+          </td>
+          <td class="text-center">{{ candidat.dueDate | date: 'dd MMM yyyy' }}</td>
+          <td class="text-center">
+            <div class="progress" style="height: 20px; width: 200px; margin: auto;">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                [style.width.%]="candidat.targetAchievement"
+                [ngClass]="{
+                  'bg-success': candidat.targetAchievement >= 80,
+                  'bg-warning': candidat.targetAchievement >= 50 && candidat.targetAchievement < 80,
+                  'bg-danger': candidat.targetAchievement < 50
+                }"
+                aria-valuenow="{{ candidat.targetAchievement }}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              >
+                {{ candidat.targetAchievement }}%
+              </div>
+            </div>
+          </td>
+          <td class="text-center">
+            <button
+              class="btn-shadow btn btn-primary btn-sm"
+              [disabled]="candidat.statut !== 'Accepté'"
+              (click)="open(content, candidat)"
+            >
+              Planifier un entretien
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- Modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h5 class="modal-title">Planification d'entretien</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="mb-3">
+        <label for="entretienDate" class="form-label">Date de l'entretien</label>
+        <input
+          type="date"
+          id="entretienDate"
+          class="form-control"
+          [(ngModel)]="selectedCandidat.entretienDate"
+          name="entretienDate"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="entretienHeure" class="form-label">Heure de l'entretien</label>
+        <input
+          type="time"
+          id="entretienHeure"
+          class="form-control"
+          [(ngModel)]="selectedCandidat.entretienHeure"
+          name="entretienHeure"
+          required
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="confirmerEntretien()"
+    >
+      Confirmer
+    </button>
+  </div>
+</ng-template>

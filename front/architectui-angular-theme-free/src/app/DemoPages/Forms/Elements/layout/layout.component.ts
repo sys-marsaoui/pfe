@@ -7,8 +7,8 @@ import {Component, OnInit} from '@angular/core';
 })
 export class LayoutComponent implements OnInit {
 
-  heading = 'Form Layouts';
-  subheading = 'Build whatever layout you need with our ArchitectUI framework.';
+  heading = 'RGI Tunis';
+  subheading = 'We re Hiring! Come And Join Us To Build Your Dream.';
   icon = 'pe-7s-graph text-success';
 
   constructor() {

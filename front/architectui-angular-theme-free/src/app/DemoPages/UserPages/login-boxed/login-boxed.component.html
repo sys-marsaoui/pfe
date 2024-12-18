@@ -14,7 +14,7 @@
             <div id="exampleInputGroup1" role="group" aria-describedby="exampleInputGroup1__BV_description_" class="mb-3">
               <div>
                 <input id="exampleInput1" type="email" placeholder="Enter email..." required="required"
-                  aria-required="true" class="form-control" aria-describedby="exampleInputGroup1__BV_description_">
+                  aria-required="true" class="form-control" aria-describedby="exampleInputGroup1__BV_description_" [(ngModel)]="credentiels.email">
                 <small tabindex="-1" id="exampleInputGroup1__BV_description_" class="form-text text-muted">We'll never
                   share your email with anyone else.
                 </small>
@@ -22,7 +22,7 @@
             </div>
             <div id="exampleInputGroup2" role="group" class="mb-3">
               <div><input id="exampleInput2" type="password" placeholder="Enter password..." required="required"
-                  aria-required="true" class="form-control"></div>
+                  aria-required="true" class="form-control" [(ngModel)]="credentiels.password"></div>
             </div>
             <div class="custom-control custom-checkbox form-check">
               <input id="exampleCheck" type="checkbox" name="check" autocomplete="off" class="form-check-input" value="true">
@@ -40,7 +40,7 @@
             <div class="float-start"><a [routerLink]="" class="btn-lg btn btn-link">Recover
                 Password</a></div>
             <div class="float-end">
-              <button type="button" class="btn btn-primary btn-lg">Login to Dashboard</button>
+              <button type="button" class="btn btn-primary btn-lg"  (click)="connect()">Login to Dashboard</button>
             </div>
           </div>
         </div>

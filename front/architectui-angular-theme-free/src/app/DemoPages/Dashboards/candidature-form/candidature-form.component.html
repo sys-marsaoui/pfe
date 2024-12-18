@@ -1,0 +1,68 @@
+<div class="main-card mb-3 card">
+    <div class="card-body">
+      <h5 class="card-title">Soumettre une candidature</h5>
+      <form>
+        <!-- Champ pour le nom et prénom -->
+        <div class="position-relative row mb-3">
+          <label for="fullName" class="form-label col-sm-2 col-form-label">Nom et Prénom</label>
+          <div class="col-sm-10">
+            <input
+              name="fullName"
+              id="fullName"
+              placeholder="Entrez votre nom et prénom"
+              type="text"
+              class="form-control"
+            />
+          </div>
+        </div>
+  
+        <!-- Champ pour l'adresse e-mail -->
+        <div class="position-relative row mb-3">
+          <label for="email" class="form-label col-sm-2 col-form-label">Email</label>
+          <div class="col-sm-10">
+            <input
+              name="email"
+              id="email"
+              placeholder="Entrez votre adresse e-mail"
+              type="email"
+              class="form-control"
+            />
+          </div>
+        </div>
+  
+        <!-- Champ pour le numéro de téléphone -->
+        <div class="position-relative row mb-3">
+          <label for="phone" class="form-label col-sm-2 col-form-label">Téléphone</label>
+          <div class="col-sm-10">
+            <input
+              name="phone"
+              id="phone"
+              placeholder="Entrez votre numéro de téléphone"
+              type="tel"
+              class="form-control"
+            />
+          </div>
+        </div>
+  
+        <!-- Champ pour télécharger le CV -->
+        <div class="position-relative row mb-3">
+          <label for="uploadCV" class="form-label col-sm-2 col-form-label">Télécharger CV</label>
+          <div class="col-sm-10">
+            <input name="uploadCV" id="uploadCV" type="file" class="form-control" />
+            <small class="form-text text-muted">
+              Formats acceptés : PDF, DOC, DOCX.
+            </small>
+          </div>
+        </div>
+  
+        <!-- Boutons -->
+        <div class="position-relative row mb-3">
+          <div class="col-sm-10 offset-sm-2">
+            <button type="button" class="btn btn-primary me-2">Soumettre la candidature</button>
+            <button type="reset" class="btn btn-secondary">Annuler</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  

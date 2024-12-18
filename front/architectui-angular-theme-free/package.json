@@ -12,7 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular-redux/store": "^9.0.0",
-    "@angular/animations": "^11.2.2",
+    "@angular/animations": "^11.2.14",
     "@angular/cdk": "^7.3.6",
     "@angular/common": "^11.2.2",
     "@angular/compiler": "^11.2.2",
@@ -38,6 +38,7 @@
     "lodash-es": "^4.17.21",
     "ng2-charts": "^2.4.2",
     "ngx-perfect-scrollbar": "^10.1.0",
+    "ngx-toastr": "^13.2.1",
     "pe7-icon": "^1.0.4",
     "redux": "4.0.0",
     "sass": "^1.32.8",

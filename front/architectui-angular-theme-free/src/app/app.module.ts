@@ -8,6 +8,7 @@ import {rootReducer, ArchitectUIState} from './ThemeOptions/store';
 import {ConfigActions} from './ThemeOptions/store/config.actions';
 import {AppRoutingModule} from './app-routing.module';
 import {LoadingBarRouterModule} from '@ngx-loading-bar/router';
+import { ToastrModule } from 'ngx-toastr';
 
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
@@ -48,6 +49,8 @@ import {FooterComponent} from './Layout/Components/footer/footer.component';
 // Dashboards
 
 import {AnalyticsComponent} from './DemoPages/Dashboards/analytics/analytics.component';
+import { QuizComponent } from './DemoPages/Dashboards/quiz/quiz.component';
+
 
 // Pages
 
@@ -103,6 +106,10 @@ import {BubbleChartComponent} from './DemoPages/Charts/chartjs/examples/bubble-c
 import {DynamicChartComponent} from './DemoPages/Charts/chartjs/examples/dynamic-chart/dynamic-chart.component';
 import {DoughnutChartComponent} from './DemoPages/Charts/chartjs/examples/doughnut-chart/doughnut-chart.component';
 import {PieChartComponent} from './DemoPages/Charts/chartjs/examples/pie-chart/pie-chart.component';
+import { PosteComponent } from './DemoPages/Dashboards/poste/poste.component';
+import { CandidatureFormComponent } from './DemoPages/Dashboards/candidature-form/candidature-form.component';
+import { ResultTableCandidatComponent } from './DemoPages/Dashboards/result-table-candidat/result-table-candidat.component';
+import { CondidaturCardComponent } from './DemoPages/Dashboards/condidatur-card/condidatur-card.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -138,6 +145,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     // Dashboards
 
     AnalyticsComponent,
+    
 
     // User Pages
 
@@ -193,6 +201,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DynamicChartComponent,
     BubbleChartComponent,
     ScatterChartComponent,
+    QuizComponent,
+    PosteComponent,
+    CandidatureFormComponent,
+    ResultTableCandidatComponent,
+    CondidaturCardComponent
   ],
   imports: [
     BrowserModule,
@@ -201,7 +214,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgReduxModule,
     CommonModule,
     LoadingBarRouterModule,
-
+    BrowserAnimationsModule,  // Ajoutez BrowserAnimationsModule ici
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right', // Option de positionnement des toasts
+      timeOut: 3000, // Temps d'affichage du toast
+      closeButton: true, // Affiche un bouton de fermeture
+      progressBar: true, // Barre de progression
+    }),
     // Angular Bootstrap Components
 
     PerfectScrollbarModule,
