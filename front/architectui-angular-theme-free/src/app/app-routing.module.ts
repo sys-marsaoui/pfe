@@ -49,8 +49,10 @@ import {ControlsComponent} from './DemoPages/Forms/Elements/controls/controls.co
 import {LayoutComponent} from './DemoPages/Forms/Elements/layout/layout.component';
 
 // Charts
+import { CreateQuizComponent } from './DemoPages/Dashboards/create-quiz/create-quiz.component';
 
 import {ChartjsComponent} from './DemoPages/Charts/chartjs/chartjs.component';
+import { PassageDuQuizComponent } from './DemoPages/Dashboards/passage-du-quiz/passage-du-quiz.component';
 
 const routes: Routes = [
   {
@@ -64,10 +66,13 @@ const routes: Routes = [
 
       // Elements
 
+      {path: 'elements/cards', component: CardsComponent, data: {extraParameter: 'elementsMenu'}},
+
+
       {path: 'elements/buttons-standard', component: StandardComponent, data: {extraParameter: 'elementsMenu'}},
       {path: 'elements/dropdowns', component: DropdownsComponent, data: {extraParameter: 'elementsMenu'}},
       {path: 'elements/icons', component: IconsComponent, data: {extraParameter: 'elementsMenu'}},
-      {path: 'elements/cards', component: CardsComponent, data: {extraParameter: 'elementsMenu'}},
+    //  {path: 'elements/cards', component: CardsComponent, data: {extraParameter: 'elementsMenu'}},
       {path: 'elements/list-group', component: ListGroupsComponent, data: {extraParameter: 'elementsMenu'}},
       {path: 'elements/timeline', component: TimelineComponent, data: {extraParameter: 'elementsMenu'}},
 
@@ -92,7 +97,8 @@ const routes: Routes = [
       // Forms Elements
 
       {path: 'forms/controls', component: ControlsComponent, data: {extraParameter: 'formElementsMenu'}},
-      {path: 'forms/layouts', component: LayoutComponent, data: {extraParameter: 'formElementsMenu'}},
+     //{path: 'forms/layouts', component: LayoutComponent, data: {extraParameter: 'formElementsMenu'}},
+      {path: 'forms/layouts', component: PassageDuQuizComponent, data: {extraParameter: 'formElementsMenu'}},
 
       // Charts
 

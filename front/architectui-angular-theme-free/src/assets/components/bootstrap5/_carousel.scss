@@ -116,7 +116,7 @@
   }
 }
 .carousel-control-prev {
-  left: 0;
+  left: -100px;
   background-image: if($enable-gradients, linear-gradient(90deg, rgba($black, .25), rgba($black, .001)), null);
 }
 .carousel-control-next {

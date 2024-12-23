@@ -1,0 +1,111 @@
+// Style principal pour le quiz
+.quiz-carousel 
+  position: relative
+
+  .carousel-control-next 
+    width: 40px // Réduire la taille des flèches
+    height: 40px
+    top: 50% // Centrer verticalement
+    transform: translateY(-50%)
+    background-color: rgba(0, 0, 0, 0.5) // Fond semi-transparent pour les flèches
+    border-radius: 50% // Forme circulaire
+    z-index: 10 // Priorité au-dessus des autres éléments
+    display: flex
+    justify-content: center
+    align-items: center
+  
+
+  .carousel-control-prev 
+    display: none// Décaler vers la gauche
+  
+
+  .carousel-control-next 
+    right: -30px // Décaler vers la droite
+  
+
+  .carousel-control-prev-icon
+   display: none
+  .carousel-control-next-icon 
+    width: 20px // Taille de l'icône
+    height: 20px
+  
+
+  .carousel-indicators 
+    display: none // Supprimer les points de navigation si non nécessaires
+  
+
+
+// Style des conteneurs de questions
+.question-container 
+  background-color: #ffffff // Fond blanc
+  border: 1px solid #ddd // Bordure grise légère
+  border-radius: 10px // Coins arrondis
+  padding: 20px
+  margin-bottom: 15px // Espace entre les questions
+  position: relative
+
+
+// Style des labels des options
+.form-check-label 
+  font-size: 16px // Taille de police lisible
+  margin-left: 10px
+
+
+// Style des inputs des réponses
+.form-check-input 
+  margin-right: 10px
+
+
+// Bouton Soumettre
+.btn-success
+  font-size: 18px
+  font-weight: bold
+  text-transform: uppercase
+  padding: 10px
+  background-color: #28a745 // Vert principal
+  border: none
+  border-radius: 5px
+  transition: all 0.3s ease
+
+  &:hover
+    background-color: #218838 // Vert foncé sur hover
+    transform: translateY(-2px) // Légère animation
+
+// En-tête du quiz
+.card-header 
+  background-color: #007bff // Couleur bleue
+  color: white
+  text-align: center
+  padding: 15px
+  border-radius: 10px 10px 0 0 // Coins supérieurs arrondis
+
+
+// Texte sous le titre
+.card-header small
+  font-size: 14px
+  font-style: italic
+
+/* Masquer uniquement la flèche Back (précédente) */
+.ngb-carousel .carousel-control-prev 
+  display: none // Masquer complètement la flèche gauche
+
+
+/* Conserver le style de la flèche Next (suivante) */
+.ngb-carousel .carousel-control-next 
+  right: -50px // Décalage vers l'extérieur pour éviter de recouvrir les réponses
+  width: 40px
+  height: 40px
+  top: 50%
+  transform: translateY(-50%)
+  background-color: rgba(0, 0, 0, 0.5) // Fond semi-transparent
+  border-radius: 50% // Forme circulaire
+  z-index: 10
+  display: flex
+  justify-content: center
+  align-items: center
+
+
+/* Style de l'icône Next */
+.ngb-carousel .carousel-control-next-icon 
+  width: 20px
+  height: 20px

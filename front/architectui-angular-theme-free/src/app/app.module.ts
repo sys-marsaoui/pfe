@@ -110,6 +110,9 @@ import { PosteComponent } from './DemoPages/Dashboards/poste/poste.component';
 import { CandidatureFormComponent } from './DemoPages/Dashboards/candidature-form/candidature-form.component';
 import { ResultTableCandidatComponent } from './DemoPages/Dashboards/result-table-candidat/result-table-candidat.component';
 import { CondidaturCardComponent } from './DemoPages/Dashboards/condidatur-card/condidatur-card.component';
+import { PassageDuQuizComponent } from './DemoPages/Dashboards/passage-du-quiz/passage-du-quiz.component';
+import { QuizListComponent } from './DemoPages/Dashboards/quiz-list/quiz-list.component';
+import { CreateQuizComponent } from './DemoPages/Dashboards/create-quiz/create-quiz.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -205,7 +208,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     PosteComponent,
     CandidatureFormComponent,
     ResultTableCandidatComponent,
-    CondidaturCardComponent
+    CondidaturCardComponent,
+    PassageDuQuizComponent,
+    QuizListComponent,
+    CreateQuizComponent
   ],
   imports: [
     BrowserModule,

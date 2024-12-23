@@ -1,0 +1,106 @@
+<div class="modal-header">
+  <h5 class="modal-title">Créer un Quiz</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="quizForm" (ngSubmit)="saveQuiz()">
+    <!-- Titre du Quiz -->
+    <div class="mb-3">
+      <label for="quizTitle" class="form-label">Titre du Quiz</label>
+      <input
+        id="quizTitle"
+        type="text"
+        class="form-control"
+        placeholder="Entrez le titre du quiz"
+        formControlName="title"
+        required
+      />
+    </div>
+
+    <!-- Questions -->
+    <div formArrayName="questions">
+      <div
+        class="question-container mb-4"
+        *ngFor="let question of questions.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <!-- Question -->
+        <div class="mb-3">
+          <label for="questionText{{ i }}" class="form-label">Question {{ i + 1 }}</label>
+          <input
+            id="questionText{{ i }}"
+            type="text"
+            class="form-control"
+            placeholder="Entrez la question"
+            formControlName="text"
+            required
+          />
+        </div>
+
+        <!-- Réponses -->
+        <div formArrayName="options" class="mb-3">
+          <div
+            *ngFor="let option of question.get('options').controls; let j = index"
+            [formGroupName]="j"
+            class="option-container mb-2"
+          >
+            <input
+              type="text"
+              class="form-control d-inline w-75 me-2"
+              placeholder="Entrez une option de réponse"
+              formControlName="text"
+              required
+            />
+            <input
+              type="checkbox"
+              formControlName="isCorrect"
+              class="form-check-input"
+              id="isCorrect{{ i }}{{ j }}"
+            />
+            <label class="form-check-label" for="isCorrect{{ i }}{{ j }}">
+              Bonne réponse
+            </label>
+            <button
+              type="button"
+              class="btn btn-danger btn-sm ms-2"
+              (click)="removeOption(i, j)"
+            >
+              Supprimer
+            </button>
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm mt-2"
+            (click)="addOption(i)"
+          >
+            Ajouter une option
+          </button>
+        </div>
+
+        <!-- Points -->
+        <div class="mb-3">
+          <label for="points{{ i }}" class="form-label">Points attribués</label>
+          <input
+            id="points{{ i }}"
+            type="number"
+            class="form-control"
+            placeholder="Points"
+            formControlName="points"
+            required
+          />
+        </div>
+
+        <hr />
+      </div>
+    </div>
+
+    <!-- Ajouter une question -->
+    <button type="button" class="btn btn-primary" (click)="addQuestion()">
+      Ajouter une question
+    </button>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+  <button type="button" class="btn btn-success" (click)="saveQuiz()">Enregistrer le quiz</button>
+</div>

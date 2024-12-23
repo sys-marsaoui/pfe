@@ -1,20 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { QuizService } from 'src/app/core/services/QuizService';
-import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-quiz',
-  templateUrl: './quiz.component.html',
-  styleUrls: ['./quiz.component.sass'],
-  template: `<button class="btn btn-primary" (click)="openCreateQuizModal()">Créer un Quiz</button>`
+  selector: 'app-create-quiz',
+  templateUrl: './create-quiz.component.html',
+  styleUrls: ['./create-quiz.component.sass']
 })
-export class QuizComponent implements OnInit {
-  quizForm: FormGroup;
-  quizzes: any[] = [];
+export class CreateQuizComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private quizService: QuizService,private modalService: NgbModal) {
+  quizForm: FormGroup;
+
+  constructor(
+    private fb: FormBuilder,
+    private quizService: QuizService,
+    public activeModal: NgbActiveModal
+  ) {
     this.quizForm = this.fb.group({
       title: ['', Validators.required],
       questions: this.fb.array([]),
@@ -24,9 +26,7 @@ export class QuizComponent implements OnInit {
     this.addQuestion();
   }
 
-  ngOnInit(): void {
-    this.loadQuizzes();
-  }
+  ngOnInit(): void {}
 
   // Getter for questions array
   get questions(): FormArray {
@@ -80,9 +80,7 @@ export class QuizComponent implements OnInit {
       this.quizService.createQuiz(quizData).subscribe(
         (response) => {
           console.log('Quiz saved successfully:', response);
-          this.loadQuizzes(); // Reload quizzes after saving
-          this.quizForm.reset();
-          alert('Quiz enregistré avec succès !');
+          this.activeModal.close(response); // Close modal and pass response
         },
         (error) => {
           console.error('Error saving quiz:', error);
@@ -94,26 +92,9 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  // Load all quizzes
-  loadQuizzes(): void {
-    this.quizService.getAllQuizzes().subscribe(
-      (data) => {
-        this.quizzes = data;
-      },
-      (error) => {
-        console.error('Error loading quizzes:', error);
-      }
-    );
-  }
-  openCreateQuizModal(): void {
-    const modalRef = this.modalService.open(CreateQuizComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.result.then(
-      (result) => {
-        console.log('Quiz créé:', result);
-      },
-      (reason) => {
-        console.log('Modal fermé:', reason);
-      }
-    );
+  // Close modal
+  closeModal(): void {
+    this.activeModal.dismiss();
   }
 }
+

@@ -1,0 +1,61 @@
+<app-page-title [heading]="quiz.title" [subheading]="'Nombre de questions : ' + questions.length" [icon]="'pe-7s-study'"></app-page-title>
+
+<div class="col-md-8 mx-auto">
+  <div class="card">
+    <div class="card-header text-center">
+      <h4>{{ quiz.title }}</h4>
+      <small>Nombre de questions : {{ questions.length }}</small>
+    </div>
+    <div class="card-body">
+      <div class="carousel-wrapper">
+        <ngb-carousel *ngIf="questions.length > 0" [interval]="0" class="quiz-carousel">
+          <!-- Affichage des questions -->
+          <ng-template ngbSlide *ngFor="let question of questions; let i = index">
+            <div class="question-container p-3">
+              <h5 class="mb-3 text-center">Question {{ i + 1 }}: {{ question.text }}</h5>
+
+              <!-- Boutons radio -->
+              <div *ngIf="question.type === 'radio'">
+                <div *ngFor="let option of question.options" class="form-check">
+                  <input
+                    type="radio"
+                    class="form-check-input"
+                    [name]="'question' + i"
+                    [value]="option.id"
+                    (change)="updateAnswer(i, option.id)"
+                  />
+                  <label class="form-check-label">{{ option.label }}</label>
+                </div>
+              </div>
+
+              <!-- Cases à cocher -->
+              <div *ngIf="question.type === 'checkbox'">
+                <div *ngFor="let option of question.options" class="form-check">
+                  <input
+                    type="checkbox"
+                    class="form-check-input"
+                    [value]="option.id"
+                    (change)="updateCheckboxAnswer(i, option.id, $event)"
+                  />
+                  <label class="form-check-label">{{ option.label }}</label>
+                </div>
+              </div>
+
+              <!-- Champ de texte -->
+              <div *ngIf="question.type === 'text'">
+                <textarea
+                  class="form-control"
+                  placeholder="Entrez votre réponse"
+                  (input)="updateAnswer(i, $event.target.value)"
+                ></textarea>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-carousel>
+      </div>
+
+      <!-- Bouton Soumettre -->
+      <button class="btn btn-success mt-3 w-100" (click)="submitQuiz()">Soumettre</button>
+    </div>
+  </div>
+</div>
