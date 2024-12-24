@@ -57,6 +57,7 @@ import { CandidatureComponent } from './feature/candidature/candidature.componen
 import { DetaillePosteComponent } from './feature/poste/detaille-poste/detaille-poste.component';
 import { ListePosteComponent } from './feature/poste/liste-poste/liste-poste.component';
 import { QuizComponent } from './feature/quiz/quiz/quiz.component';
+import { QuizListComponent } from './feature/quiz/quiz-list/quiz-list.component';
 
 const routes: Routes = [
   {
@@ -70,6 +71,7 @@ const routes: Routes = [
       {path: 'detaille-poste', component: DetaillePosteComponent, data: {extraParameter: 'dashboardsMenu'}},
       {path: 'postes', component: ListePosteComponent, data: {extraParameter: 'dashboardsMenu'}},
       {path: 'quiz/:id', component: PassageDuQuizComponent, data: {extraParameter: 'dashboardsMenu'}},
+      {path: 'quizList', component: QuizListComponent, data: {extraParameter: 'dashboardsMenu'}},
 
 
       // Elements
