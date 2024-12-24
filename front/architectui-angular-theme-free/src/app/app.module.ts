@@ -49,7 +49,7 @@ import {FooterComponent} from './Layout/Components/footer/footer.component';
 // Dashboards
 
 import {AnalyticsComponent} from './DemoPages/Dashboards/analytics/analytics.component';
-import { QuizComponent } from './DemoPages/Dashboards/quiz/quiz.component';
+import { QuizComponent } from './feature/quiz/quiz/quiz.component';
 
 
 // Pages
@@ -89,7 +89,6 @@ import {ChartBoxes3Component} from './DemoPages/Widgets/chart-boxes3/chart-boxes
 // Forms Elements
 
 import {ControlsComponent} from './DemoPages/Forms/Elements/controls/controls.component';
-import {LayoutComponent} from './DemoPages/Forms/Elements/layout/layout.component';
 
 // Charts
 
@@ -108,11 +107,15 @@ import {DoughnutChartComponent} from './DemoPages/Charts/chartjs/examples/doughn
 import {PieChartComponent} from './DemoPages/Charts/chartjs/examples/pie-chart/pie-chart.component';
 import { PosteComponent } from './DemoPages/Dashboards/poste/poste.component';
 import { CandidatureFormComponent } from './DemoPages/Dashboards/candidature-form/candidature-form.component';
-import { ResultTableCandidatComponent } from './DemoPages/Dashboards/result-table-candidat/result-table-candidat.component';
+import { ResultTableCandidatComponent } from './feature/poste/result-table-candidat/result-table-candidat.component';
 import { CondidaturCardComponent } from './DemoPages/Dashboards/condidatur-card/condidatur-card.component';
 import { PassageDuQuizComponent } from './DemoPages/Dashboards/passage-du-quiz/passage-du-quiz.component';
-import { QuizListComponent } from './DemoPages/Dashboards/quiz-list/quiz-list.component';
-import { CreateQuizComponent } from './DemoPages/Dashboards/create-quiz/create-quiz.component';
+import { QuizListComponent } from './feature/quiz/quiz-list/quiz-list.component';
+import { CreateQuizComponent } from './feature/quiz/create-quiz/create-quiz.component';
+import { CandidatureComponent } from './feature/candidature/candidature.component';
+import { ListePosteComponent } from './feature/poste/liste-poste/liste-poste.component';
+import { NewPosteComponent } from './feature/poste/new-poste/new-poste.component';
+import { DetaillePosteComponent } from './feature/poste/detaille-poste/detaille-poste.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -187,7 +190,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     // Form Elements
 
     ControlsComponent,
-    LayoutComponent,
 
     // CHARTS
 
@@ -211,7 +213,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CondidaturCardComponent,
     PassageDuQuizComponent,
     QuizListComponent,
-    CreateQuizComponent
+    CreateQuizComponent,
+    CandidatureComponent,
+    ListePosteComponent,
+    NewPosteComponent,
+    DetaillePosteComponent
   ],
   imports: [
     BrowserModule,

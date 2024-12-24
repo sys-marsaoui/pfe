@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QuizService } from 'src/app/core/services/QuizService';
+import { PostService } from 'src/app/core/services/post.service';
 
 @Component({
   selector: 'app-quiz-list',
@@ -11,8 +12,9 @@ import { QuizService } from 'src/app/core/services/QuizService';
 export class QuizListComponent implements OnInit {
 
   quizzes: any[] = [];
+  selectedQuizId: string | null = null;
 
-  constructor(private quizService: QuizService, private modalService: NgbModal) {}
+  constructor(private quizService: QuizService,  private postService: PostService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.loadQuizzes();
@@ -55,6 +57,19 @@ export class QuizListComponent implements OnInit {
       },
       () => {
         console.log('Modal fermé sans action.');
+      }
+    );
+  }
+
+  // Associer un quiz à un poste
+  associateQuizToPost(quizId: string, postId: string): void {
+    const payload = { quizId };
+    this.postService.updatePost(postId, payload).subscribe(
+      () => {
+        console.log('Quiz associé au poste avec succès.');
+      },
+      (error) => {
+        console.error('Erreur lors de l\'association du quiz:', error);
       }
     );
   }

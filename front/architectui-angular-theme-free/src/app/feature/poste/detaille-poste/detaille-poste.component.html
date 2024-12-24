@@ -1,0 +1,52 @@
+<div class="mb-3 card">
+    <div class="card-header-tab card-header">
+      <div class="card-header-title font-size-lg text-capitalize fw-normal">
+        <i class="header-icon lnr-briefcase icon-gradient bg-happy-green"> </i>
+        Développeur Java - Offre d'emploi
+      </div>
+    </div>
+    <div class="g-0 row">
+      <div class="col-sm-12 col-md-6 col-xl-6">
+        <div class="card no-shadow rm-border bg-transparent widget-chart text-start">
+          <div class="widget-chart-content">
+            <div class="widget-subheading">Poste proposé :</div>
+            <div class="widget-numbers">Développeur Java</div>
+            <div class="widget-description opacity-8">
+              Rejoignez une équipe dynamique et contribuez à des projets innovants en utilisant des technologies Java modernes.
+              <br><br>
+              **Important :** Le processus de recrutement comprend un **test en ligne** sélectif. Seuls les candidats ayant réussi ce test seront considérés pour ce poste.
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="col-sm-12 col-md-6 col-xl-6">
+        <div class="card no-shadow rm-border bg-transparent widget-chart text-start">
+          <div class="widget-chart-content">
+            <div class="widget-subheading">Responsabilités :</div>
+            <ul>
+              <li>Développer des applications backend en Java.</li>
+              <li>Participer à la conception des systèmes distribués.</li>
+              <li>Collaborer avec les équipes frontend et UX.</li>
+              <li>Mettre en œuvre des tests unitaires et assurer le suivi des performances.</li>
+              <li>Travailler avec des bases de données relationnelles et NoSQL.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="text-center d-block p-3 card-footer">
+      <button class="btn-pill btn-shadow btn-wide fsize-1 btn btn-primary btn-lg" [routerLink] = "['/quiz', poste.id ]">
+        <span class="me-2 opacity-7">
+          <i class="icon icon-anim-pulse ion-ios-paper-plane-outline"></i>
+        </span>
+         passer le test en ligne
+      </button>
+    </div>
+  </div>
+
+
+  <ng-container>
+    <app-result-table-candidat></app-result-table-candidat>
+  </ng-container>

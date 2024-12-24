@@ -1,47 +1,37 @@
-<div class="mb-3 card">
-    <div class="card-header-tab card-header">
-      <div class="card-header-title font-size-lg text-capitalize fw-normal">
-        <i class="header-icon lnr-briefcase icon-gradient bg-happy-green"> </i>
-        Développeur Java - Offre d'emploi
-      </div>
-    </div>
-    <div class="g-0 row">
-      <div class="col-sm-12 col-md-6 col-xl-6">
-        <div class="card no-shadow rm-border bg-transparent widget-chart text-start">
-          <div class="widget-chart-content">
-            <div class="widget-subheading">Poste proposé :</div>
-            <div class="widget-numbers">Développeur Java</div>
-            <div class="widget-description opacity-8">
-              Rejoignez une équipe dynamique et contribuez à des projets innovants en utilisant des technologies Java modernes.
-              <br><br>
-              **Important :** Le processus de recrutement comprend un **test en ligne** sélectif. Seuls les candidats ayant réussi ce test seront considérés pour ce poste.
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-sm-12 col-md-6 col-xl-6">
-        <div class="card no-shadow rm-border bg-transparent widget-chart text-start">
-          <div class="widget-chart-content">
-            <div class="widget-subheading">Responsabilités :</div>
-            <ul>
-              <li>Développer des applications backend en Java.</li>
-              <li>Participer à la conception des systèmes distribués.</li>
-              <li>Collaborer avec les équipes frontend et UX.</li>
-              <li>Mettre en œuvre des tests unitaires et assurer le suivi des performances.</li>
-              <li>Travailler avec des bases de données relationnelles et NoSQL.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <div class="text-center d-block p-3 card-footer">
-      <button class="btn-pill btn-shadow btn-wide fsize-1 btn btn-primary btn-lg">
-        <span class="me-2 opacity-7">
-          <i class="icon icon-anim-pulse ion-ios-paper-plane-outline"></i>
-        </span>
-        Postuler pour ce poste et passer le test en ligne
-      </button>
-    </div>
+<div class="main-card mb-3 card">
+  <div class="card-header">
+    <h5 class="card-title">Liste des Postes</h5>
+    <button class="btn btn-primary float-end" (click)="openCreatePostModal()">Créer un Post</button>
   </div>
+  <div class="card-body">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Description</th>
+          <th>Type de Contrat</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts">
+          <td>{{ post.title }}</td>
+          <td>{{ post.description }}</td>
+          <td>{{ post.contractType }}</td>
+          <td>
+            <select class="form-select" (change)="associateQuizToPost($event.target.value, post.id)">
+              <option [value]="null" selected>Choisir un quiz</option>
+              <option *ngFor="let quiz of quizzes" [value]="quiz.id">
+                {{ quiz.title }}
+              </option>
+            </select>
+          </td>
+          <td>
+            <button class="btn btn-warning btn-sm me-2">Modifier</button>
+            <button class="btn btn-danger btn-sm" (click)="deletePost(post.id)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

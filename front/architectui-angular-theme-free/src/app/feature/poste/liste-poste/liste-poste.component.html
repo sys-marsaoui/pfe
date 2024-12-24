@@ -1,0 +1,30 @@
+<div class="main-card mb-3 card">
+    <div class="card-header">
+      <h5 class="card-title">Liste des Postes</h5>
+      <button class="btn btn-primary float-end" (click)="openCreatePostModal()">Créer un Post</button>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Description</th>
+            <th>Type de Contrat</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let post of posts">
+            <td>{{ post.title }}</td>
+            <td>{{ post.description }}</td>
+            <td>{{ post.contractType }}</td>
+            <td>
+              <button class="btn btn-warning btn-sm me-2">Modifier</button>
+              <button class="btn btn-danger btn-sm" (click)="deletePost(post.id)">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

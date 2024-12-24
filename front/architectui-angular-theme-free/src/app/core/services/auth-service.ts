@@ -31,4 +31,8 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!localStorage.getItem('auth_token'); // Remplace par ta méthode de stockage du token
   }
+
+  registerCandidateForPost(postId: string, candidate: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/post/${postId}/register`, candidate);
+  }
 }

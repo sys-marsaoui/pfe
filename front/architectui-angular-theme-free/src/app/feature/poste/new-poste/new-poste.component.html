@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <h5 class="modal-title">Créer un Poste</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="postForm">
+      <!-- Titre -->
+      <div class="mb-3">
+        <label for="title" class="form-label">Titre</label>
+        <input
+          id="title"
+          type="text"
+          class="form-control"
+          placeholder="Titre du poste"
+          formControlName="title"
+          required
+        />
+      </div>
+  
+      <!-- Description -->
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea
+          id="description"
+          class="form-control"
+          placeholder="Description du poste"
+          formControlName="description"
+          rows="3"
+          required
+        ></textarea>
+      </div>
+  
+      <!-- Type de contrat -->
+      <div class="mb-3">
+        <label for="contractType" class="form-label">Type de Contrat</label>
+        <select id="contractType" class="form-select" formControlName="contractType" required>
+          <option value="" disabled selected>Choisir un type de contrat</option>
+          <option value="CDI">CDI</option>
+          <option value="CDD">CDD</option>
+          <option value="Stage">Stage</option>
+        </select>
+      </div>
+  
+      <!-- Quiz associé -->
+      <div class="mb-3">
+        <label for="quizId" class="form-label">Quiz Associé</label>
+        <select id="quizId" class="form-select" formControlName="quizId">
+          <option value="" disabled selected>Aucun Quiz</option>
+          <option *ngFor="let quiz of quizzes" [value]="quiz.id">{{ quiz.title }}</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+    <button type="button" class="btn btn-success" (click)="savePost()">Enregistrer</button>
+  </div>
+  

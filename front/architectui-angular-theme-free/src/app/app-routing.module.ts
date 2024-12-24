@@ -46,13 +46,17 @@ import {ChartBoxes3Component} from './DemoPages/Widgets/chart-boxes3/chart-boxes
 // Forms Elements
 
 import {ControlsComponent} from './DemoPages/Forms/Elements/controls/controls.component';
-import {LayoutComponent} from './DemoPages/Forms/Elements/layout/layout.component';
 
 // Charts
-import { CreateQuizComponent } from './DemoPages/Dashboards/create-quiz/create-quiz.component';
+import { CreateQuizComponent } from './feature/quiz/create-quiz/create-quiz.component';
 
 import {ChartjsComponent} from './DemoPages/Charts/chartjs/chartjs.component';
 import { PassageDuQuizComponent } from './DemoPages/Dashboards/passage-du-quiz/passage-du-quiz.component';
+import { PosteComponent } from './DemoPages/Dashboards/poste/poste.component';
+import { CandidatureComponent } from './feature/candidature/candidature.component';
+import { DetaillePosteComponent } from './feature/poste/detaille-poste/detaille-poste.component';
+import { ListePosteComponent } from './feature/poste/liste-poste/liste-poste.component';
+import { QuizComponent } from './feature/quiz/quiz/quiz.component';
 
 const routes: Routes = [
   {
@@ -62,10 +66,14 @@ const routes: Routes = [
 
       // Dashboads
 
-      {path: '', component: AnalyticsComponent, data: {extraParameter: 'dashboardsMenu'}},
+      {path: '', component: PosteComponent, data: {extraParameter: 'dashboardsMenu'}},
+      {path: 'detaille-poste', component: DetaillePosteComponent, data: {extraParameter: 'dashboardsMenu'}},
+      {path: 'postes', component: ListePosteComponent, data: {extraParameter: 'dashboardsMenu'}},
+      {path: 'quiz/:id', component: PassageDuQuizComponent, data: {extraParameter: 'dashboardsMenu'}},
+
 
       // Elements
-
+      {path: 'candidature', component: CandidatureComponent, data: {extraParameter: 'elementsMenu'}},
       {path: 'elements/cards', component: CardsComponent, data: {extraParameter: 'elementsMenu'}},
 
 
@@ -97,7 +105,6 @@ const routes: Routes = [
       // Forms Elements
 
       {path: 'forms/controls', component: ControlsComponent, data: {extraParameter: 'formElementsMenu'}},
-     //{path: 'forms/layouts', component: LayoutComponent, data: {extraParameter: 'formElementsMenu'}},
       {path: 'forms/layouts', component: PassageDuQuizComponent, data: {extraParameter: 'formElementsMenu'}},
 
       // Charts
