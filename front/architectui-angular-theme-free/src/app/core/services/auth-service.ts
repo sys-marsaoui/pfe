@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-    private apiUrl = 'http://localhost:8080';
+    private apiUrl = environment.apiUrl;
     private readonly tokenKey = 'auth_token';
 
     constructor(private http:HttpClient){}
@@ -32,7 +33,5 @@ export class AuthService {
     return !!localStorage.getItem('auth_token'); // Remplace par ta méthode de stockage du token
   }
 
-  registerCandidateForPost(postId: string, candidate: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/post/${postId}/register`, candidate);
-  }
+
 }

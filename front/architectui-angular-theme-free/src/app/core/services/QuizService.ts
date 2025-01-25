@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QuizService {
-    private baseUrl = 'http://localhost:8080/api/quizzes'; // Backend API URL
+    private baseUrl = environment.apiUrl + '/api/quizzes'; // Backend API URL
 
     constructor(private http: HttpClient) {}
   

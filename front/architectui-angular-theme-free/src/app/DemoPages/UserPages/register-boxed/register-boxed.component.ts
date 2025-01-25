@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RegisterBoxedServices } from './register-boxed.service';
+import {  Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-register-boxed',
@@ -8,17 +9,22 @@ import { RegisterBoxedServices } from './register-boxed.service';
 })
 export class RegisterBoxedComponent implements OnInit {
   userCredentials: any = {};
-  constructor(private registerBoxedServices: RegisterBoxedServices) { }
+  post: string;
+  constructor(private registerBoxedServices: RegisterBoxedServices, private route: ActivatedRoute,
+     private router: Router ) { }
 
   ngOnInit() {
-    this.createUser();
+     this.route.queryParams.subscribe(params => {
+              this.post = params.post;
+          });
   }
+
    createUser() {
-this.registerBoxedServices.postData(this.userCredentials).subscribe(async response => {
-  console.log('Post successful:', await response.json());
-  // Reset form or handle success
+this.registerBoxedServices.postData(this.userCredentials, this.post).subscribe( response => {
+ this.router.navigate(['/login' ]);
+
 }, error => {
-  console.error('Error posting data:', error);
+  console.error('Error posting data:',);
   // Handle error
 });
 }

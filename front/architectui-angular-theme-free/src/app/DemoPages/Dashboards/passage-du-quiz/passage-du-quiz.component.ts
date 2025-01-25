@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 import { QuizService } from 'src/app/core/services/QuizService';
 import { ToastService } from 'src/app/core/services/ToasetService'; // Si tu utilises un service de notifications
 
@@ -17,8 +18,9 @@ export class PassageDuQuizComponent implements OnInit {
   questions: any[] = [];
   answers: any = {};
   quizId: string | null = null;
+  postId:string;
 
-  constructor(private route: ActivatedRoute, private quizService: QuizService,private toastService:ToastService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private quizService: QuizService, private toastService:ToastService) {}
 
   ngOnInit(): void {
     // Get the quiz ID from the route
@@ -77,6 +79,11 @@ export class PassageDuQuizComponent implements OnInit {
       (response: any) => {
         console.log('Quiz submitted successfully:', response);
         this.toastService.success(`Your score: ${response.userScore}/${response.totalScore}`);
+        this.quizService.submitQuizAnswers(this.quizId, payload).subscribe(()=> {
+          console.log(jwtDecode(localStorage.getItem('auth_token'))['user']?.postId)
+          this.postId = jwtDecode(localStorage.getItem('auth_token'))['user']?.postId;
+          this.router.navigateByUrl('detaille-poste/'+ this.postId);
+        });
       },
       (error: any) => {
         console.error('Error submitting quiz:', error);

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { PostService } from 'src/app/core/services/post.service';
 
 @Component({
   selector: 'app-detaille-poste',
@@ -7,10 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetaillePosteComponent implements OnInit {
 
-  poste : any= {id:'123'};
-  constructor() { }
+  post : any;
+  postId: string
+  constructor(private route: ActivatedRoute, private postService: PostService) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.postId = params.id;
+  });
+  this.loadData();
+  }
+
+  loadData(): void {
+    this.postService.getPostById(this.postId).subscribe(result => {this.post = result})
   }
 
 }

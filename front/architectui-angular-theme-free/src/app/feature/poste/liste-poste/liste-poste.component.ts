@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostService } from 'src/app/core/services/post.service';
 import { NewPosteComponent } from '../new-poste/new-poste.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-liste-poste',
@@ -14,7 +15,7 @@ export class ListePosteComponent implements OnInit {
   icon = 'pe-7s-plane icon-gradient bg-tempting-azure';
   posts: any[] = [];
 
-  constructor(private postService: PostService, private modalService: NgbModal) {}
+  constructor(private postService: PostService, private modalService: NgbModal, private router: Router) {}
 
   ngOnInit(): void {
     this.loadPosts();
@@ -58,5 +59,9 @@ openCreatePostModal(): void {
       console.log('Modal fermé.');
     }
   );
+}
+
+openDetail(idPost: string): void {
+  this.router.navigateByUrl('/detaille-poste/'+ idPost)
 }
 }

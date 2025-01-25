@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 import {ToastrService} from 'ngx-toastr'
 import { AuthService } from 'src/app/core/services/auth-service';
 
@@ -15,6 +16,7 @@ export class LoginBoxedComponent implements OnInit {
     email:'',
     password:''
   }
+  postId :string;
   constructor( private authService: AuthService,private router:Router,private toastService:ToastrService) { }
   
   ngOnInit() {
@@ -24,7 +26,9 @@ this.authService.Auth(this.credentiels).subscribe((response)=>{
   if(response.code==200&&response.token!=null){
       this.authService.saveToken(response.token)
       this.toastService.success('Connected')
-      this.router.navigate(['/']);
+       console.log(jwtDecode(localStorage.getItem('auth_token'))['user']?.postId)
+                this.postId = jwtDecode(localStorage.getItem('auth_token'))['user']?.postId;
+                this.router.navigateByUrl('detaille-poste/'+ this.postId);
   }else{
     this.toastService.error("Bad Credentiels")
   }

@@ -11,7 +11,7 @@ import {LoadingBarRouterModule} from '@ngx-loading-bar/router';
 import { ToastrModule } from 'ngx-toastr';
 
 import {CommonModule} from '@angular/common';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
 
 // BOOTSTRAP COMPONENTS
@@ -116,6 +116,7 @@ import { CandidatureComponent } from './feature/candidature/candidature.componen
 import { ListePosteComponent } from './feature/poste/liste-poste/liste-poste.component';
 import { NewPosteComponent } from './feature/poste/new-poste/new-poste.component';
 import { DetaillePosteComponent } from './feature/poste/detaille-poste/detaille-poste.component';
+import { AuthInterceptor } from './core/interceptors/token.interseptor';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -255,6 +256,13 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       DEFAULT_PERFECT_SCROLLBAR_CONFIG,
       // DEFAULT_DROPZONE_CONFIG,
     },
+   
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptor,
+        multi: true,
+      },
+    
     ConfigActions,
   ],
   bootstrap: [AppComponent]
