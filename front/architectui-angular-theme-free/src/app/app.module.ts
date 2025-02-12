@@ -40,16 +40,10 @@ import {UserBoxComponent} from './Layout/Components/header/elements/user-box/use
 import {SidebarComponent} from './Layout/Components/sidebar/sidebar.component';
 import {LogoComponent} from './Layout/Components/sidebar/elements/logo/logo.component';
 
-// FOOTER
-
-import {FooterComponent} from './Layout/Components/footer/footer.component';
-
-// DEMO PAGES
 
 // Dashboards
 
 import {AnalyticsComponent} from './DemoPages/Dashboards/analytics/analytics.component';
-import { QuizComponent } from './feature/quiz/quiz/quiz.component';
 
 
 // Pages
@@ -117,6 +111,7 @@ import { ListePosteComponent } from './feature/poste/liste-poste/liste-poste.com
 import { NewPosteComponent } from './feature/poste/new-poste/new-poste.component';
 import { DetaillePosteComponent } from './feature/poste/detaille-poste/detaille-poste.component';
 import { AuthInterceptor } from './core/interceptors/token.interseptor';
+import { ProfileComponent } from './DemoPages/Dashboards/profile/profile/profile.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -143,9 +138,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SidebarComponent,
     LogoComponent,
 
-    // FOOTER
-
-    FooterComponent,
 
     // DEMO PAGES
 
@@ -207,7 +199,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DynamicChartComponent,
     BubbleChartComponent,
     ScatterChartComponent,
-    QuizComponent,
     PosteComponent,
     CandidatureFormComponent,
     ResultTableCandidatComponent,
@@ -218,7 +209,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CandidatureComponent,
     ListePosteComponent,
     NewPosteComponent,
-    DetaillePosteComponent
+    DetaillePosteComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

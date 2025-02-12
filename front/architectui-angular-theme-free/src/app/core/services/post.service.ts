@@ -11,6 +11,14 @@ export class PostService {
 
   constructor(private http: HttpClient) {}
 
+  getStat(postId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/${postId}/stat`);
+  }
+
+  getStatByUser(postId: string, userId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${postId}/stat/${userId}`);
+  }
+
   getAllPosts(): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl);
   }

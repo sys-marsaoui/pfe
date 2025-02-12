@@ -1,0 +1,49 @@
+<div class="profile-container">
+    <h2>Candidate Profile</h2>
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" formControlName="username" placeholder="Enter your username">
+      </div>
+  
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" placeholder="Enter your email">
+      </div>
+  
+      <!-- Phone Number -->
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="tel" id="phoneNumber" formControlName="phoneNumber" placeholder="Enter your phone number">
+      </div>
+  
+      <!-- LinkedIn Profile -->
+      <div class="form-group">
+        <label for="linkedin">LinkedIn Profile</label>
+        <input type="url" id="linkedin" formControlName="linkedin" placeholder="Enter your LinkedIn profile URL">
+      </div>
+  
+      <!-- Profile Picture Upload -->
+      <div class="form-group">
+        <label for="picture">Profile Picture</label>
+        <input type="file" id="picture" (change)="onFileChange($event, 'picture')" accept="image/*">
+      </div>
+  
+      <!-- Diploma Upload -->
+      <div class="form-group">
+        <label for="diploma">Diploma</label>
+        <input type="file" id="diploma" (change)="onFileChange($event, 'diploma')" accept=".pdf,.doc,.docx">
+      </div>
+  
+      <!-- CV Upload -->
+      <div class="form-group">
+        <label for="cv">Upload CV</label>
+        <input type="file" id="cv" (change)="onFileChange($event, 'cv')" accept=".pdf,.doc,.docx">
+      </div>
+  
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="!profileForm.valid">Save Profile</button>
+    </form>
+  </div>

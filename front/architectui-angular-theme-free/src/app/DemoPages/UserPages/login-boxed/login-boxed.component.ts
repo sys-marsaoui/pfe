@@ -26,9 +26,12 @@ this.authService.Auth(this.credentiels).subscribe((response)=>{
   if(response.code==200&&response.token!=null){
       this.authService.saveToken(response.token)
       this.toastService.success('Connected')
-       console.log(jwtDecode(localStorage.getItem('auth_token'))['user']?.postId)
-                this.postId = jwtDecode(localStorage.getItem('auth_token'))['user']?.postId;
-                this.router.navigateByUrl('detaille-poste/'+ this.postId);
+      this.postId = jwtDecode(localStorage.getItem('auth_token'))['user']?.postId;
+      if(jwtDecode(localStorage.getItem('auth_token'))['user']?.role ==="CONDIDATE"){
+        this.router.navigateByUrl('detaille-poste/'+ this.postId);
+      }else {
+        this.router.navigateByUrl('postes');
+      }
   }else{
     this.toastService.error("Bad Credentiels")
   }

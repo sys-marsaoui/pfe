@@ -18,7 +18,7 @@ export class QuizService {
   
     // Submit quiz answers
     submitQuizAnswers(id: string, payload: any): Observable<any> {
-      return this.http.post(`${this.baseUrl}/${id}/submit`, payload);
+      return this.http.post(`${this.baseUrl}/submit`, payload);
     }
   
     // Create a new quiz (optional if needed)

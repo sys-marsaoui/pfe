@@ -14,12 +14,12 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     // Récupérer le token depuis localStorage ou une autre méthode de stockage
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('auth_token');
 
     // Si un token est présent, ajoutez-le à l'en-tête Authorization
     if (token) {
       const cloned = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`),
+        headers: req.headers.append('Authorization', `Bearer ${token}`),
       });
       return next.handle(cloned);
     }

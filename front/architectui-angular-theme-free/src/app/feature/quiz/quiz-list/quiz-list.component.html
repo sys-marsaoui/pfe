@@ -1,18 +1,57 @@
 <div class="main-card mb-3 card">
     <div class="card-header">
-      <h5 class="card-title">Liste des Quiz</h5>
-      <button class="btn btn-primary float-end" (click)="openCreateQuizModal()">Créer un Quiz</button>
-    </div>
-    <div class="card-body">
       <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let quiz of quizzes">
-          <span>{{ quiz.title }}</span>
-          <div>
-            <button class="btn btn-warning btn-sm me-2">Détails</button>
-            <button class="btn btn-danger btn-sm" (click)="deleteQuiz(quiz.id)">Supprimer</button>
-          </div>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <label for="technology" class="form-label">Technology</label>
+          <select id="technology" multiple class="form-select">
+            <option value="" disabled selected>Aucune technology</option>
+            <option *ngFor="let technology of technologies" [value]="technology">{{ technology.name }}</option>
+          </select>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <label for="Level" class="form-label">Difficulter</label>
+      <select id="Level" class="form-select" formControlName="level">
+        <option value="" disabled selected>Choisir la difficulter</option>
+        <option value="JUNIOR">Junior</option>
+        <option value="CONFIRMED">Comfirme</option>
+        <option value="SENIOR">Sinior</option>
+        <option value="EXPERT">Expert</option>
+      </select>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <button class="btn btn-primary float-end" (click)="openCreateQuizModal()">Créer un Quiz</button>
         </li>
       </ul>
+      
     </div>
   </div>
-  
+  <div class="main-card mb-3 card">
+    <div class="table-responsive">
+      <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
+        <thead>
+        <tr >
+          <th class="text-center">title</th>
+          <th class="text-center">level</th>
+          <th class="text-center">number of question</th>
+          <th class="text-center">Time</th>
+          <th class="text-center">Technology</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let quiz of quizzes">
+          <td class="text-center" style="width: 80px;">{{ quiz?.title }}</td>
+          <td class="text-center" style="width: 100px;">{{ quiz?.level }}</td>
+          <td class="text-center" style="width: 100px;">{{ quiz?.questions?.length }}</td>
+          <td class="text-center">{{calculateQuizTime(quiz)}} sec</td>
+          <td class="text-center" *ngFor="let tech of extractQuizTechnologies(quiz)">
+            <div class="badge rounded-pill bg-danger">{{tech}}</div>
+          </td>
+          <td>
+            <button class="btn btn-warning btn-sm me-2">Détails</button>
+            <button class="btn btn-danger btn-sm" (click)="deleteQuiz(quiz.id)">Supprimer</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

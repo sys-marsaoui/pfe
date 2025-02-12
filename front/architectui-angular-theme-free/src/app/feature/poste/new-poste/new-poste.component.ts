@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PostService } from 'src/app/core/services/post.service';
-import { QuizService } from 'src/app/core/services/QuizService';
 
 @Component({
   selector: 'app-new-poste',
@@ -10,30 +9,47 @@ import { QuizService } from 'src/app/core/services/QuizService';
   styleUrls: ['./new-poste.component.sass']
 })
 export class NewPosteComponent implements OnInit {
+  @Input() post: any; // Données du poste pour la modification (null si création)
   postForm: FormGroup;
-  quizzes: any[] = [];
+  quizzes: any[] = []; // Liste des quiz pour le menu déroulant
 
   constructor(
     private fb: FormBuilder,
     private postService: PostService,
-    private quizService: QuizService,
     public activeModal: NgbActiveModal
   ) {
     this.postForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       contractType: ['', Validators.required],
-      quizId: [null], // Quiz associé
+      nbrOpenPost: ['1', Validators.required],
+      quizId: [''], // Quiz associé
+      responsibilities: this.fb.array([]) // Liste dynamique des responsabilités
     });
   }
 
   ngOnInit(): void {
     this.loadQuizzes();
+
+    // Si un poste est passé pour modification, pré-remplir le formulaire
+    if (this.post) {
+      this.postForm.patchValue({
+        title: this.post.title,
+        description: this.post.description,
+        contractType: this.post.contractType,
+        quizId: this.post.quizId
+      });
+
+      // Ajouter les responsabilités existantes au formulaire
+      this.post.responsabilites.forEach((res: string) => {
+        this.addResponsibility(res);
+      });
+    }
   }
 
-  // Charger la liste des quiz
+  // Charger la liste des quiz depuis le backend
   loadQuizzes(): void {
-    this.quizService.getAllQuizzes().subscribe(
+    this.postService.getAllPosts().subscribe(
       (data) => {
         this.quizzes = data;
       },
@@ -43,20 +59,53 @@ export class NewPosteComponent implements OnInit {
     );
   }
 
-  // Enregistrer le poste
+  // Getter pour accéder à la liste dynamique des responsabilités
+  get responsibilities(): FormArray {
+    return this.postForm.get('responsibilities') as FormArray;
+  }
+
+  // Ajouter une responsabilité
+  addResponsibility(value: string = ''): void {
+    const responsibilityGroup = this.fb.group({
+      responsibility: [value, Validators.required]
+    });
+    this.responsibilities.push(responsibilityGroup);
+  }
+
+  // Supprimer une responsabilité
+  removeResponsibility(index: number): void {
+    this.responsibilities.removeAt(index);
+  }
+
+  // Enregistrer ou mettre à jour le poste
   savePost(): void {
-    if (this.postForm.valid) {
-      this.postService.createPost(this.postForm.value).subscribe(
+    const postData = {
+      ...this.postForm.value,
+      responsabilites: this.postForm.value.responsibilities.map((r: any) => r.responsibility)
+    };
+
+    if (this.post) {
+      // Mode mise à jour
+      this.postService.updatePost(this.post.id, postData).subscribe(
         (response) => {
-          console.log('Post enregistré avec succès:', response);
-          this.activeModal.close(response); // Fermer le modal après succès
+          console.log('Post mis à jour avec succès:', response);
+          this.activeModal.close(response); // Fermer le modal avec succès
         },
         (error) => {
-          console.error('Erreur lors de l\'enregistrement du poste:', error);
+          console.error('Erreur lors de la mise à jour:', error);
         }
       );
     } else {
-      console.error('Formulaire invalide');
+      // Mode création
+      this.postService.createPost(postData).subscribe(
+        (response) => {
+          console.log('Post créé avec succès:', response);
+          this.activeModal.close(response); // Fermer le modal avec succès
+        },
+        (error) => {
+          console.error('Erreur lors de la création:', error);
+        }
+      );
     }
   }
 

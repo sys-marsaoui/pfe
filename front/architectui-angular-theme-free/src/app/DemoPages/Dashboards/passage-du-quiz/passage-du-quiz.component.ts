@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { QuizService } from 'src/app/core/services/QuizService';
 import { ToastService } from 'src/app/core/services/ToasetService'; // Si tu utilises un service de notifications
+import { TokenDecoder } from 'src/app/shared/utils/jwt.util';
 
 @Component({
   selector: 'passage-du-quiz',
@@ -19,18 +20,16 @@ export class PassageDuQuizComponent implements OnInit {
   answers: any = {};
   quizId: string | null = null;
   postId:string;
-
-  constructor(private route: ActivatedRoute, private router: Router, private quizService: QuizService, private toastService:ToastService) {}
+  user: any = {};
+  constructor(private tokenDecoder: TokenDecoder, private route: ActivatedRoute, private router: Router, private quizService: QuizService, private toastService:ToastService ) {}
 
   ngOnInit(): void {
     // Get the quiz ID from the route
     this.quizId = this.route.snapshot.paramMap.get('id');
     if (this.quizId) {
       this.loadQuiz(this.quizId);
-    }else{
-      this.quizId ="676925d921e3c36c489ba027"
-      this.loadQuiz(this.quizId);
     }
+     this.user = this.tokenDecoder.getUser();
   }
 
   // Load the quiz from the backend
@@ -52,38 +51,29 @@ export class PassageDuQuizComponent implements OnInit {
     this.answers[questionId] = answerValue;
   }
 
-  // Update answers for checkboxes
-  updateCheckboxAnswer(questionIndex: number, answerValue: any, event: any): void {
-    const questionId = this.questions[questionIndex].id;
-    if (!this.answers[questionId]) {
-      this.answers[questionId] = [];
-    }
-
-    if (event.target.checked) {
-      this.answers[questionId].push(answerValue);
-    } else {
-      this.answers[questionId] = this.answers[questionId].filter((val: any) => val !== answerValue);
-    }
-  }
-
   // Submit the quiz answers
   submitQuiz(): void {
     if (!this.quizId) return;
 
+    const questionAnswers = [];
+    Object.keys(this.answers)
+    .forEach((key) => {
+      questionAnswers.push({"questionId": key, "answerIds": this.answers[key] })
+  });
+  console.log(this.tokenDecoder.getUser());
+
     const payload = {
       quizId: this.quizId,
-      answers: this.answers,
+      postId: this.user.postId,
+      userId: this.user.id,
+      questionAnswers: questionAnswers
     };
 
     this.quizService.submitQuizAnswers(this.quizId, payload).subscribe(
       (response: any) => {
-        console.log('Quiz submitted successfully:', response);
-        this.toastService.success(`Your score: ${response.userScore}/${response.totalScore}`);
-        this.quizService.submitQuizAnswers(this.quizId, payload).subscribe(()=> {
-          console.log(jwtDecode(localStorage.getItem('auth_token'))['user']?.postId)
-          this.postId = jwtDecode(localStorage.getItem('auth_token'))['user']?.postId;
-          this.router.navigateByUrl('detaille-poste/'+ this.postId);
-        });
+        this.toastService.success(`Your score: ${response.scoreDescription}`);
+        console.log(jwtDecode(localStorage.getItem('auth_token'))['user']?.postId)
+        this.router.navigateByUrl('detaille-poste/'+ payload.postId);
       },
       (error: any) => {
         console.error('Error submitting quiz:', error);

@@ -2,60 +2,50 @@
   <div class="card-header">
     <div class="card-header-title font-size-lg text-capitalize fw-normal">
       Suivi des candidatures
-    </div>
+    </div>    
   </div>
   <div class="table-responsive">
     <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
       <thead>
         <tr>
           <th class="text-center">Nom et Prénom</th>
-          <th class="text-center">Résultat</th>
           <th class="text-center">Statut</th>
-          <th class="text-center">Date de passage</th>
+          <th class="text-center">Résultat</th>
           <th class="text-center">Target Achievement</th>
+          <th class="text-center">Date de passage</th>
           <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let candidat of candidats">
-          <td class="text-center">{{ candidat.nom }}</td>
-          <td class="text-center">{{ candidat.resultat }}</td>
-          <td class="text-center">
-            <div
-              class="badge rounded-pill"
-              [ngClass]="{
-                'bg-warning': candidat.statut === 'À traiter',
-                'bg-success': candidat.statut === 'Accepté',
-                'bg-danger': candidat.statut === 'Rejeté'
-              }"
-            >
-              {{ candidat.statut }}
-            </div>
-          </td>
-          <td class="text-center">{{ candidat.dueDate | date: 'dd MMM yyyy' }}</td>
+          <td class="text-center">{{ candidat.name }}</td>
+          <td class="text-center">{{ candidat.status }}</td>
+          <td class="text-center">{{ candidat.result }}</td>
+
           <td class="text-center">
             <div class="progress" style="height: 20px; width: 200px; margin: auto;">
               <div
                 class="progress-bar"
                 role="progressbar"
-                [style.width.%]="candidat.targetAchievement"
+                [style.width.%]="candidat.target"
                 [ngClass]="{
-                  'bg-success': candidat.targetAchievement >= 80,
-                  'bg-warning': candidat.targetAchievement >= 50 && candidat.targetAchievement < 80,
-                  'bg-danger': candidat.targetAchievement < 50
+                  'bg-success': candidat.target >= 80,
+                  'bg-warning': candidat.target >= 50 && candidat.target < 80,
+                  'bg-danger': candidat.target < 50
                 }"
-                aria-valuenow="{{ candidat.targetAchievement }}"
+                aria-valuenow="{{ candidat.target }}"
                 aria-valuemin="0"
                 aria-valuemax="100"
               >
-                {{ candidat.targetAchievement }}%
+                {{ candidat.target }}%
               </div>
             </div>
           </td>
+          <td class="text-center">{{ candidat.dateP | date: 'dd MMM yyyy' }}</td>
           <td class="text-center">
             <button
               class="btn-shadow btn btn-primary btn-sm"
-              [disabled]="candidat.statut !== 'Accepté'"
+              [disabled]="candidat.target < 80"
               (click)="open(content, candidat)"
             >
               Planifier un entretien

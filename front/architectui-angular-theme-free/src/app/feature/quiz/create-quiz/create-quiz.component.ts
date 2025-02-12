@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { QuizService } from 'src/app/core/services/QuizService';
+import { TechnologyService } from 'src/app/core/services/TechnologyService';
 
 @Component({
   selector: 'app-create-quiz',
@@ -11,14 +12,18 @@ import { QuizService } from 'src/app/core/services/QuizService';
 export class CreateQuizComponent implements OnInit {
 
   quizForm: FormGroup;
+  technologies: any[] = [];
+
 
   constructor(
     private fb: FormBuilder,
     private quizService: QuizService,
+    private technologyService: TechnologyService,
     public activeModal: NgbActiveModal
   ) {
     this.quizForm = this.fb.group({
       title: ['', Validators.required],
+      level: ['', [Validators.required]],
       questions: this.fb.array([]),
     });
 
@@ -26,8 +31,11 @@ export class CreateQuizComponent implements OnInit {
     this.addQuestion();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadTechnologies();
+  }
 
+  
   // Getter for questions array
   get questions(): FormArray {
     return this.quizForm.get('questions') as FormArray;
@@ -38,6 +46,8 @@ export class CreateQuizComponent implements OnInit {
     const questionGroup = this.fb.group({
       text: ['', Validators.required],
       points: [1, [Validators.required, Validators.min(1)]],
+      time: [1, [Validators.required, Validators.min(15)]],
+      technology:  ['', [Validators.required]],
       options: this.fb.array([]),
     });
     this.questions.push(questionGroup);
@@ -95,6 +105,17 @@ export class CreateQuizComponent implements OnInit {
   // Close modal
   closeModal(): void {
     this.activeModal.dismiss();
+  }
+
+  loadTechnologies(): void {
+    this.technologyService.getAll().subscribe(
+      (data) => {
+        this.technologies = data;
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des technologies:', error);
+      }
+    );
   }
 }
 

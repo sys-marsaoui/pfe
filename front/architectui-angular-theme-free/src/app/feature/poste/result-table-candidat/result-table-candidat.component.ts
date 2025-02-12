@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { PostService } from 'src/app/core/services/post.service';
 
 @Component({
   selector: 'app-result-table-candidat',
@@ -8,37 +9,8 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 })
 export class ResultTableCandidatComponent implements OnInit {
 
-
-  candidats = [
-    {
-      nom: 'Houssem Marsaoui',
-      resultat: '85%',
-      statut: 'Accepté',
-      dueDate: new Date(2024, 11, 20), // Example: December 20, 2024
-      targetAchievement: 95
-    },
-    {
-      nom: 'Marie Curie',
-      resultat: '70%',
-      statut: 'À traiter',
-      dueDate: new Date(2024, 11, 25), // Example: December 25, 2024
-      targetAchievement: 60
-    },
-    {
-      nom: 'Albert Einstein',
-      resultat: '90%',
-      statut: 'Rejeté',
-      dueDate: new Date(2024, 11, 15), // Example: December 15, 2024
-      targetAchievement: 40
-    },
-    {
-      nom: 'Sarra Newton',
-      resultat: '95%',
-      statut: 'Accepté',
-      dueDate: new Date(2024, 11, 10), // Example: December 10, 2024
-      targetAchievement: 80
-    }
-  ];
+@Input() postId :string;
+  candidats : any ;
   heading = 'RGI Tunis';
   subheading = 'We re Hiring! Come And Join Us To Build Your Dream.';
   icon = 'pe-7s-phone icon-gradient bg-premium-dark';
@@ -46,9 +18,17 @@ export class ResultTableCandidatComponent implements OnInit {
   selectedCandidat: any = null;
   closeResult = '';
 
-  constructor(private modalService: NgbModal) {}
+
+
+  constructor(private postService: PostService, private modalService: NgbModal) {}
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.loadPostStat()
+  }
+
+  loadPostStat(){
+    this.postService.getStat(this.postId).subscribe(res=>{
+      this.candidats = res;
+    })
   }
 
   // Ouvrir le modal avec gestion des résultats

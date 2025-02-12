@@ -15,7 +15,7 @@
               <h5 class="mb-3 text-center">Question {{ i + 1 }}: {{ question.text }}</h5>
 
               <!-- Boutons radio -->
-              <div *ngIf="question.type === 'radio'">
+              <div>
                 <div *ngFor="let option of question.options" class="form-check">
                   <input
                     type="radio"
@@ -24,30 +24,8 @@
                     [value]="option.id"
                     (change)="updateAnswer(i, option.id)"
                   />
-                  <label class="form-check-label">{{ option.label }}</label>
+                  <label class="form-check-label">{{ option.text }}</label>
                 </div>
-              </div>
-
-              <!-- Cases à cocher -->
-              <div *ngIf="question.type === 'checkbox'">
-                <div *ngFor="let option of question.options" class="form-check">
-                  <input
-                    type="checkbox"
-                    class="form-check-input"
-                    [value]="option.id"
-                    (change)="updateCheckboxAnswer(i, option.id, $event)"
-                  />
-                  <label class="form-check-label">{{ option.label }}</label>
-                </div>
-              </div>
-
-              <!-- Champ de texte -->
-              <div *ngIf="question.type === 'text'">
-                <textarea
-                  class="form-control"
-                  placeholder="Entrez votre réponse"
-                  (input)="updateAnswer(i, $event.target.value)"
-                ></textarea>
               </div>
             </div>
           </ng-template>

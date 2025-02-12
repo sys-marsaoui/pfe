@@ -1,7 +1,7 @@
-<div [class]="'app-sidebar sidebar-shadow ' + (config$ | async).sidebarTheme" (mouseover)="sidebarHover()"
+<div *ngIf="!isCondidate" [class]="'app-sidebar sidebar-shadow ' + (config$ | async).sidebarTheme" (mouseover)="sidebarHover()"
      (mouseout)="sidebarHover()">
-  <div class="app-header__logo">
-    <div class="logo-src"></div>
+  <div class="app-header__logo"
+  >
     <div class="header__pane ms-auto">
       <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
               [ngClass]="{'is-active' : globals.toggleSidebar}" (click)="toggleSidebar()">
@@ -24,48 +24,21 @@
               </ngb-panel>
               <ngb-panel id="dashboardsMenu">
                 <ng-template ngbPanelHeader>
-                  <button ngbPanelToggle class="vsm-link">
+                  <button ngbPanelToggle routerLink="postes" routerLinkActive="active-item"
+                  [routerLinkActiveOptions]="{exact: true}" class="vsm-link">
                     <i class="vsm-icon pe-7s-rocket"></i>
-                    <span class="vsm-title">Dashboards</span>
-                    <i class="vsm-arrow"></i>
+                    <span class="vsm-title">Postes</span>
                   </button>
-                </ng-template>
-                <ng-template ngbPanelContent>
-                  <div class="vsm-dropdown">
-                    <div class="vsm-list">
-                      <div class="vsm-item"><a routerLink="" routerLinkActive="active-item"
-                                               [routerLinkActiveOptions]="{exact: true}" class="vsm-link"><span
-                        class="vsm-title">Analytics</span></a>
-                      </div>
-                    </div>
-                  </div>
-                </ng-template>
-              </ngb-panel>
-              <ngb-panel id="pagesMenu">
-                <ng-template ngbPanelHeader>
-                  <button ngbPanelToggle class="vsm-link">
-                    <i class="vsm-icon pe-7s-browser"></i>
-                    <span class="vsm-title">Pages</span>
-                    <i class="vsm-arrow"></i>
+                  <button ngbPanelToggle routerLink="quizList" routerLinkActive="active-item"
+                  [routerLinkActiveOptions]="{exact: true}" class="vsm-link">
+                    <i class="vsm-icon pe-7s-rocket"></i>
+                    <span class="vsm-title">Quiz</span>
                   </button>
-                </ng-template>
-                <ng-template ngbPanelContent>
-                  <div class="vsm-dropdown">
-                    <div class="vsm-list">
-                      <div class="vsm-item">
-                        <a routerLinkActive="active-item" routerLink="/pages/login-boxed" class="vsm-link"><span
-                          class="vsm-title">Login Boxed</span></a>
-                      </div>
-                      <div class="vsm-item">
-                        <a routerLinkActive="active-item" routerLink="/pages/register-boxed" class="vsm-link"><span
-                          class="vsm-title">Register Boxed</span></a>
-                      </div>
-                      <div class="vsm-item">
-                        <a routerLinkActive="active-item" routerLink="/pages/forgot-password-boxed"
-                           class="vsm-link"><span class="vsm-title">Forgot Password Boxed</span></a>
-                      </div>
-                    </div>
-                  </div>
+                  <button ngbPanelToggle routerLink="candidats" routerLinkActive="active-item"
+                  [routerLinkActiveOptions]="{exact: true}" class="vsm-link">
+                    <i class="vsm-icon pe-7s-rocket"></i>
+                    <span class="vsm-title">Condidat</span>
+                  </button>
                 </ng-template>
               </ngb-panel>
             </ngb-accordion>

@@ -15,6 +15,14 @@
         formControlName="title"
         required
       />
+      <label for="Level" class="form-label">Difficulter</label>
+      <select id="Level" class="form-select" formControlName="level" required>
+        <option value="" disabled selected>Choisir la difficulter</option>
+        <option value="JUNIOR">Junior</option>
+        <option value="CONFIRMED">Comfirme</option>
+        <option value="SENIOR">Sinior</option>
+        <option value="EXPERT">Expert</option>
+      </select>
     </div>
 
     <!-- Questions -->
@@ -35,6 +43,20 @@
             formControlName="text"
             required
           />
+          <label for="questionTime{{ i }}" class="form-label">Time en sec</label>
+          <input
+            id="questionTime{{ i }}"
+            type="number"
+            class="form-control"
+            placeholder="Entrez le temps"
+            formControlName="time"
+            required
+          />
+          <label for="technology{{ i }}" class="form-label">Technology</label>
+          <select id="technology" class="form-select" formControlName="technology">
+            <option value="" disabled selected>Aucune technology</option>
+            <option *ngFor="let technology of technologies" [value]="technology.name">{{ technology.name }}</option>
+          </select>
         </div>
 
         <!-- Réponses -->
@@ -50,7 +72,7 @@
               placeholder="Entrez une option de réponse"
               formControlName="text"
               required
-            />
+            /> 
             <input
               type="checkbox"
               formControlName="isCorrect"

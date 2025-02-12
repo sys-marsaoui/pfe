@@ -5,67 +5,107 @@
       <div class="modal-dialog w-100">
         <div class="modal-content">
           <form (ngSubmit)="createUser()">
-          <div class="modal-body">
-            <h5 class="modal-title">
-              <h4 class="mt-2">
-                <div>Welcome,</div>
-                <span>It only takes a <span class="text-success">few seconds</span> to create your account</span>
-              </h4>
-            </h5>
-            <div class="divider"></div>
-            <div id="exampleInputGroup1" role="group" aria-describedby="exampleInputGroup1__BV_description_" class="mb-3">
-              <div>
-                <input id="email"  name="email" type="email" placeholder="Enter email..." [(ngModel)]="userCredentials.email" required="required"
-                  aria-required="true" class="form-control" aria-describedby="exampleInputGroup1__BV_description_">
-                <small tabindex="-1" id="exampleInputGroup1__BV_description_" class="form-text text-muted">
-                  We'll never share your email with anyone else.
-                </small>
+            <div class="modal-body">
+              <h5 class="modal-title">
+                <h4 class="mt-2">
+                  <div>Welcome,</div>
+                  <span>It only takes a <span class="text-success">few seconds</span> to create your account</span>
+                </h4>
+              </h5>
+              <div class="divider"></div>
+
+              <!-- Email Field -->
+              <div id="exampleInputGroup1" role="group" aria-describedby="exampleInputGroup1__BV_description_" class="mb-3">
+                <div>
+                  <input id="email" name="email" type="email" placeholder="Enter email..." [(ngModel)]="userCredentials.email" required="required"
+                    aria-required="true" class="form-control">
+                  <small tabindex="-1" id="exampleInputGroup1__BV_description_" class="form-text text-muted">
+                    We'll never share your email with anyone else.
+                  </small>
+                </div>
               </div>
-            </div>
-            <div id="exampleInputGroup12" role="group" class="mb-3">
-              <div>
-                <input id="userName" name="userName" type="text" placeholder="Enter username..." [(ngModel)]="userCredentials.userName" required="required"
-                  aria-required="true" class="form-control">
+
+              <!-- Username Field -->
+              <div id="exampleInputGroup12" role="group" class="mb-3">
+                <div>
+                  <input id="userName" name="userName" type="text" placeholder="Enter username..." [(ngModel)]="userCredentials.userName" required="required"
+                    aria-required="true" class="form-control">
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div id="exampleInputGroup2" role="group" class="mb-3">
-                  <div>
-                    <input id="password" name="password" type="password" placeholder="Enter password..."  [(ngModel)]="userCredentials.password" required="required"
-                      aria-required="true" class="form-control">
+              <!-- First Name -->
+              <div id="exampleInputGroup13" role="group" class="mb-3">
+                <div>
+                  <input id="firstName" name="firstName" type="text" placeholder="Enter first name..." [(ngModel)]="userCredentials.firstName" required="required"
+                    aria-required="true" class="form-control">
+                </div>
+              </div>
+
+              <!-- Last Name -->
+              <div id="exampleInputGroup14" role="group" class="mb-3">
+                <div>
+                  <input id="lastName" name="lastName" type="text" placeholder="Enter last name..." [(ngModel)]="userCredentials.lastName" required="required"
+                    aria-required="true" class="form-control">
+                </div>
+              </div>
+
+              <!-- Address -->
+              <div id="exampleInputGroup15" role="group" class="mb-3">
+                <div>
+                  <input id="address" name="address" type="text" placeholder="Enter address..." [(ngModel)]="userCredentials.address" required="required"
+                    aria-required="true" class="form-control">
+                </div>
+              </div>
+
+              <!-- Telephone -->
+              <div id="exampleInputGroup16" role="group" class="mb-3">
+                <div>
+                  <input id="tel" name="tel" type="tel" placeholder="Enter telephone number..." [(ngModel)]="userCredentials.tel" required="required"
+                    aria-required="true" class="form-control">
+                </div>
+              </div>
+
+              <!-- Password Fields -->
+              <div class="row">
+                <div class="col-md-6">
+                  <div id="exampleInputGroup2" role="group" class="mb-3">
+                    <div>
+                      <input id="password" name="password" type="password" placeholder="Enter password..." [(ngModel)]="userCredentials.password" required="required"
+                        aria-required="true" class="form-control">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div id="exampleInputGroup2" role="group" class="mb-3">
+                    <div>
+                      <input id="repeatpassword" name="repeatpassword" type="password" placeholder="Repeat password..." [(ngModel)]="userCredentials.repeatpassword" required="required"
+                        aria-required="true" class="form-control">
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-6">
-                <div id="exampleInputGroup2" role="group" class="mb-3">
-                  <div>
-                    <input id="repeatpassword" name="repeatpassword" type="password" placeholder="Repeat password..." [(ngModel)]="userCredentials.repeatpassword" required="required"
-                      aria-required="true" class="form-control">
-                    </div>
-                </div>
+
+              <!-- Terms and Conditions -->
+              <div class="custom-control custom-checkbox form-check">
+                <input id="exampleCheck" type="checkbox" name="check" (change)="true" autocomplete="off" class="form-check-input" value="true">
+                <label for="exampleCheck" class="form-label form-check-label">
+                  Accept our <a>Terms and Conditions</a>.
+                </label>
               </div>
+              <div class="divider"></div>
+              <h6 class="mb-0">
+                Already have an account?
+                <a class="text-primary">Sign in</a>
+                |
+                <a class="text-primary">Recover Password</a>
+              </h6>
             </div>
-            <div class="custom-control custom-checkbox form-check">
-              <input id="exampleCheck" type="checkbox" name="check"  (change)="true" autocomplete="off" class="form-check-input" value="true">
-              <label for="exampleCheck" class="form-label form-check-label">
-                Accept our <a >Terms and Conditions</a>.
-              </label>
+
+            <!-- Submit Button -->
+            <div class="modal-footer d-block text-center">
+              <button type="submit" class="btn btn-wide btn-pill btn-shadow btn-hover-shine btn-secondary btn-lg">
+                Create Account
+              </button>
             </div>
-            <div class="divider"></div>
-            <h6 class="mb-0">
-              Already have an account?
-              <a  class="text-primary">Sign in</a>
-              |
-              <a class="text-primary">Recover
-                Password</a>
-            </h6>
-          </div>
-          <div class="modal-footer d-block text-center">
-            <button type="submit" class="btn btn-wide btn-pill btn-shadow btn-hover-shine btn-secondary btn-lg">Create
-              Account
-            </button>
-          </div>
           </form>
         </div>
       </div>

@@ -3,6 +3,9 @@ import { CreateQuizComponent } from '../create-quiz/create-quiz.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { QuizService } from 'src/app/core/services/QuizService';
 import { PostService } from 'src/app/core/services/post.service';
+import { TechnologyService } from 'src/app/core/services/TechnologyService';
+import { Quizz, Technology } from 'src/app/core/models/quizz.model';
+import { TokenDecoder } from 'src/app/shared/utils/jwt.util';
 
 @Component({
   selector: 'app-quiz-list',
@@ -11,13 +14,19 @@ import { PostService } from 'src/app/core/services/post.service';
 })
 export class QuizListComponent implements OnInit {
 
-  quizzes: any[] = [];
+  quizzes: Quizz[] = [];
   selectedQuizId: string | null = null;
+  technologies: any[] = [];
 
-  constructor(private quizService: QuizService,  private postService: PostService, private modalService: NgbModal) {}
+  constructor(
+    private quizService: QuizService, 
+    private postService: PostService,
+    private technologyService: TechnologyService,
+    private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.loadQuizzes();
+    this.loadTechnologies();
   }
 
   // Charger tous les quiz
@@ -72,5 +81,24 @@ export class QuizListComponent implements OnInit {
         console.error('Erreur lors de l\'association du quiz:', error);
       }
     );
+  }
+
+  loadTechnologies(): void {
+    this.technologyService.getAll().subscribe(
+      (data) => {
+        this.technologies = data;
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des technologies:', error);
+      }
+    );
+  }
+
+  calculateQuizTime(quiz: Quizz): number {
+    return quiz?.questions?.map(quetion => quetion.time).reduce((t1 , t2)=> t1+t2);
+  }
+
+  extractQuizTechnologies(quiz: Quizz): Technology[] {
+    return quiz?.questions?.map(quetion => quetion?.technology);
   }
 }

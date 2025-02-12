@@ -3,6 +3,7 @@ import {ThemeOptions} from '../../../theme-options';
 import {select} from '@angular-redux/store';
 import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
+import { TokenDecoder } from 'src/app/shared/utils/jwt.util';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,7 +12,7 @@ import {ActivatedRoute} from '@angular/router';
 export class SidebarComponent implements OnInit {
   public extraParameter: any;
 
-  constructor(public globals: ThemeOptions, private activatedRoute: ActivatedRoute) {
+  constructor(public globals: ThemeOptions, private activatedRoute: ActivatedRoute, private tokenDecoder: TokenDecoder) {
 
   }
 
@@ -20,6 +21,7 @@ export class SidebarComponent implements OnInit {
   private newInnerWidth: number;
   private innerWidth: number;
   activeId = 'dashboardsMenu';
+  isCondidate = false;
 
   toggleSidebar() {
     this.globals.toggleSidebar = !this.globals.toggleSidebar;
@@ -36,7 +38,7 @@ export class SidebarComponent implements OnInit {
         this.globals.toggleSidebar = true;
       }
     });
-
+    this.isCondidate = this.tokenDecoder.getUser().role === "CONDIDATE"
     this.extraParameter = this.activatedRoute.snapshot.firstChild.data.extraParameter;
 
   }

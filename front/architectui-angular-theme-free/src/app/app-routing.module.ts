@@ -13,6 +13,8 @@ import { DetaillePosteComponent } from './feature/poste/detaille-poste/detaille-
 import { ListePosteComponent } from './feature/poste/liste-poste/liste-poste.component';
 import { QuizListComponent } from './feature/quiz/quiz-list/quiz-list.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { ResultTableCandidatComponent } from './feature/poste/result-table-candidat/result-table-candidat.component';
+import { ProfileComponent } from './DemoPages/Dashboards/profile/profile/profile.component';
 
 const routes: Routes = [
   {
@@ -23,13 +25,13 @@ const routes: Routes = [
       // Dashboads
       {path: '', canActivate: [AuthGuard] ,component: PosteComponent, data: {extraParameter: 'dashboardsMenu'}},
       // Post
-      {path: 'detaille-poste/:id', canActivate: [AuthGuard] ,component: DetaillePosteComponent, data: {extraParameter: 'dashboardsMenu'}},
+      {path: 'detaille-poste/:id' ,component: DetaillePosteComponent, data: {extraParameter: 'dashboardsMenu'}},
       {path: 'postes',canActivate: [AuthGuard] , component: ListePosteComponent, data: {extraParameter: 'dashboardsMenu'}},
       // Quiz
-      {path: 'quiz/:id',canActivate: [AuthGuard] , component: PassageDuQuizComponent, data: {extraParameter: 'dashboardsMenu'}},
+      {path: 'quiz/:id', component: PassageDuQuizComponent, data: {extraParameter: 'dashboardsMenu'}},
       {path: 'quizList',canActivate: [AuthGuard] , component: QuizListComponent, data: {extraParameter: 'dashboardsMenu'}},
       // Candidature
-      {path: 'candidature', component: CandidatureComponent, data: {extraParameter: 'elementsMenu'}},
+      {path: 'candidats', component: ResultTableCandidatComponent, data: {extraParameter: 'elementsMenu'}},
      ]
 
   },
@@ -45,6 +47,7 @@ const routes: Routes = [
       {path: 'pages/forgot-password-boxed', component: ForgotPasswordBoxedComponent, data: {extraParameter: ''}},
     ]
   },
+  {path: 'profile', component: ProfileComponent},
   {path: '**', redirectTo: ''}
 ];
 
