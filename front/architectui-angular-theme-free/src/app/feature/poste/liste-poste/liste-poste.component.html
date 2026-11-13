@@ -1,39 +1,69 @@
-<div class="main-card mb-3 card">
-    <div class="card-header">
-      <h5 class="card-title">Liste des Postes</h5>
-      <button class="btn btn-primary float-end" (click)="openCreatePostModal()">Créer un Post</button>
-    </div>
-    <div class="card-body">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Titre</th>
-            <th>Description</th>
-            <th>Date d'expiration</th>
-            <th>Type de Contrat</th>
-            <th>nbr Postes Overt</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let post of posts"   >
-            <td>{{ post.title }}</td>
-            <td>{{ post.description }}</td>
-            <td>{{ post.expireDate }}</td>
-            <td>{{ post.contractType }}</td>
-            <td>{{ post.nbrOpenPost }}</td>
-            <td>
-              <button class="btn btn-warning btn-sm me-2" (click)="openDetail(post.id)">Details</button>
-              <button class="btn btn-warning btn-sm me-2" (click)="openUpdatePostModal(post)">Modifier</button>
-              <button class="btn btn-danger btn-sm" (click)="deletePost(post.id)">Supprimer</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="post-list">
+  <div class="post-header">
+    <h2 class="post-title">Liste des Postes</h2>
+    <button *ngIf="isAdmin" class="btn-create" (click)="openCreatePostModal()">
+      <i class="bi bi-plus-circle"></i>
+      Créer un Poste
+    </button>
   </div>
-  
 
+  <div *ngIf="linkedinMessage" class="alert" [ngClass]="linkedinMessage.includes('échoué') ? 'alert-warning' : 'alert-success'">
+    {{ linkedinMessage }}
+  </div>
 
+  <div class="post-table-wrapper">
+    <table class="post-table">
+      <thead>
+        <tr>
+          <th>Titre</th>
+          <th>Description</th>
+          <th>Date d'expiration</th>
+          <th>Type de Contrat</th>
+          <th>Postes Ouverts</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of posts" class="post-row">
+          <td class="post-title-cell">{{ post.title }}</td>
+          <td class="post-desc-cell">{{ post.description }}</td>
+          <td>{{ post.expireDate | date: 'shortDate' }}</td>
+          <td>{{ post.contractType }}</td>
+          <td class="text-center">{{ post.nbrOpenPost }}</td>
+          <td class="actions-cell">
+            <button class="action-btn view" (click)="openDetail(post.id)" title="Voir détails">
+              <i class="bi bi-eye"></i>
+            </button>
+            <button *ngIf="!isAdmin" class="action-btn register" (click)="registerForPost(post.id)"
+                    title="S’inscrire à cette offre">
+              <i class="bi bi-person-plus"></i>
+              <span>S’inscrire</span>
+            </button>
+            <button *ngIf="isAdmin" class="action-btn edit" (click)="openUpdatePostModal(post)" title="Modifier">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button *ngIf="isAdmin" class="action-btn delete" (click)="deletePost(post.id)" title="Supprimer">
+              <i class="bi bi-trash"></i>
+            </button>
+            <button *ngIf="isAdmin" class="action-btn ats" (click)="runAts(post.id)" title="Lancer ATS">
+              <i class="bi bi-robot"></i>
+            </button>
+            <button *ngIf="isAdmin" class="action-btn linkedin" (click)="shareOnLinkedIn(post.id)"
+                    [disabled]="isSharing[post.id]" title="Publier sur LinkedIn avec le lien de candidature">
+              <i class="bi bi-linkedin"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-  
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="posts.length === 0">
+    <i class="bi bi-briefcase"></i>
+    <p>Aucun poste disponible</p>
+    <button *ngIf="isAdmin" class="btn-create small" (click)="openCreatePostModal()">
+      Créer le premier poste
+    </button>
+  </div>
+</div>

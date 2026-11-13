@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Color, BaseChartDirective, Label } from 'ng2-charts';
+
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
+import { BaseChartDirective, Color, Label } from 'ng2-charts';
 
 @Component({
   selector: 'app-line-chart',

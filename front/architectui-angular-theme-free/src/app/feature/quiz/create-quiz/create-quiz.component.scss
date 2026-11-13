@@ -1,0 +1,271 @@
+// Custom styles for create-quiz component
+
+// Smooth scrolling for modal body
+.modal-body {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+
+    &:hover {
+      background: #555;
+    }
+  }
+}
+
+// Card animations
+.card {
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .card-header {
+    border-bottom: 2px solid #f8f9fa;
+    font-weight: 500;
+  }
+}
+
+// Question cards styling
+.card-body {
+  .form-label {
+    margin-bottom: 0.5rem;
+    color: #495057;
+    font-size: 0.9rem;
+
+    .text-danger {
+      font-size: 1rem;
+    }
+  }
+
+  textarea.form-control {
+    resize: vertical;
+    min-height: 60px;
+  }
+}
+
+// Input group styling for options
+.input-group {
+  .input-group-text {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
+    font-weight: 500;
+
+    &:first-child {
+      min-width: 45px;
+      justify-content: center;
+    }
+  }
+
+  .form-control {
+    &:focus {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+
+  .btn-outline-danger {
+    &:hover {
+      background-color: #dc3545;
+      color: white;
+    }
+  }
+}
+
+// Checkbox styling in input group
+.input-group-text {
+  .form-check-input {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+
+    &:checked {
+      background-color: #28a745;
+      border-color: #28a745;
+    }
+  }
+
+  .form-check-label {
+    cursor: pointer;
+    margin-bottom: 0;
+  }
+}
+
+// Button styling
+.btn {
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  i {
+    font-size: 0.9rem;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+// Alert styling
+.alert {
+  border-radius: 0.5rem;
+  
+  .badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.65em;
+  }
+}
+
+// Form validation
+.form-control,
+.form-select {
+  &.is-invalid {
+    border-color: #dc3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+
+    &:focus {
+      border-color: #dc3545;
+      box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+  }
+}
+
+.invalid-feedback {
+  display: none;
+  font-size: 0.875rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+
+  &.d-block {
+    display: block !important;
+  }
+}
+
+.form-control.is-invalid ~ .invalid-feedback,
+.form-select.is-invalid ~ .invalid-feedback {
+  display: block;
+}
+
+// Modal header
+.modal-header {
+  &.bg-primary {
+    border-bottom: none;
+    
+    .modal-title {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .btn-close-white {
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+// Modal footer
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  padding: 1rem;
+
+  .btn {
+    min-width: 100px;
+  }
+}
+
+// Empty state styling
+.text-center {
+  .bi-inbox {
+    opacity: 0.3;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .modal-body {
+    max-height: 60vh !important;
+  }
+
+  .card-body {
+    .row {
+      .col-md-4 {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  .input-group {
+    flex-wrap: wrap;
+
+    .form-control {
+      flex: 1 1 100%;
+    }
+
+    .input-group-text:not(:first-child),
+    .btn {
+      margin-top: 0.5rem;
+    }
+  }
+
+  .modal-footer {
+    .btn {
+      min-width: 80px;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Animation for adding/removing questions
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: slideIn 0.3s ease;
+}
+
+// Utility classes
+.fw-bold {
+  font-weight: 600 !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+  font-size: 0.875rem;
+}
+
+small.text-muted {
+  display: block;
+  margin-top: 0.25rem;
+}

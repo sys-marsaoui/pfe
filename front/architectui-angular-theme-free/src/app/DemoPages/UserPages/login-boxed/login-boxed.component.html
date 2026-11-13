@@ -1,53 +1,103 @@
-<div class="h-100 bg-plum-plate bg-animation">
-  <div class="d-flex h-100 justify-content-center align-items-center">
-    <div class="mx-auto app-login-box col-md-8">
-      <div class="app-logo-inverse mx-auto mb-3"></div>
-      <div class="modal-dialog w-100 mx-auto">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="h5 modal-title text-center">
-              <h4 class="mt-2">
-                <div>Welcome back,</div>
-                <span>Please sign in to your account below.</span>
-              </h4>
+<div class="login-scene">
+  <!-- Animated Background -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <div class="login-wrapper">
+    <!-- Logo -->
+    <div class="login-brand">
+      <img src="/assets/images/rgi.png" alt="RGI" class="brand-logo" />
+      <h1 class="brand-name">RGI Portal</h1>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <div class="card-inner">
+        <header class="card-header">
+          <h2 class="title">Connexion</h2>
+          <p class="subtitle">Accédez à votre espace sécurisé</p>
+        </header>
+
+        <form class="card-form" (ngSubmit)="connect()" #loginForm="ngForm">
+          <!-- Email -->
+          <div class="input-field" [class.focused]="focused.email" [class.filled]="credentials.email">
+            <div class="input-icon">
+              <i class="bi bi-envelope"></i>
             </div>
-            <div id="exampleInputGroup1" role="group" aria-describedby="exampleInputGroup1__BV_description_" class="mb-3">
-              <div>
-                <input id="exampleInput1" type="email" placeholder="Enter email..." required="required"
-                  aria-required="true" class="form-control" aria-describedby="exampleInputGroup1__BV_description_" [(ngModel)]="credentiels.email">
-                <small tabindex="-1" id="exampleInputGroup1__BV_description_" class="form-text text-muted">We'll never
-                  share your email with anyone else.
-                </small>
-              </div>
-            </div>
-            <div id="exampleInputGroup2" role="group" class="mb-3">
-              <div><input id="exampleInput2" type="password" placeholder="Enter password..." required="required"
-                  aria-required="true" class="form-control" [(ngModel)]="credentiels.password"></div>
-            </div>
-            <div class="custom-control custom-checkbox form-check">
-              <input id="exampleCheck" type="checkbox" name="check" autocomplete="off" class="form-check-input" value="true">
-              <label for="exampleCheck" class="form-label form-check-label">
-                Keep me logged in
-              </label>
-            </div>
-            <div class="divider"></div>
-            <h6 class="mb-0">
-              No account?
-              <a [routerLink]="" class="text-primary">Sign up now</a>
-            </h6>
+            <input
+              type="email"
+              class="input-control"
+              [(ngModel)]="credentials.email"
+              name="email"
+              placeholder=" "
+              required
+              email
+              (focus)="onFocus('email')"
+              (blur)="onBlur('email')"
+            />
+            <label class="input-label">Email professionnel</label>
+            <div class="input-underline"></div>
           </div>
-          <div class="modal-footer clearfix">
-            <div class="float-start"><a [routerLink]="" class="btn-lg btn btn-link">Recover
-                Password</a></div>
-            <div class="float-end">
-              <button type="button" class="btn btn-primary btn-lg"  (click)="connect()">Login to Dashboard</button>
+
+          <!-- Password -->
+          <div class="input-field" [class.focused]="focused.password" [class.filled]="credentials.password">
+            <div class="input-icon">
+              <i class="bi bi-lock"></i>
             </div>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              class="input-control"
+              [(ngModel)]="credentials.password"
+              name="password"
+              placeholder=" "
+              required
+              (focus)="onFocus('password')"
+              (blur)="onBlur('password')"
+            />
+            <label class="input-label">Mot de passe</label>
+            <div class="input-underline"></div>
+            <button type="button" class="password-toggle" (click)="togglePassword()">
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
           </div>
-        </div>
+
+          <!-- Options -->
+          <div class="form-options">
+            <label class="neumorphic-checkbox">
+              <input type="checkbox" [(ngModel)]="rememberMe" name="remember" />
+              <span class="checkmark"></span>
+              <span class="label-text">Rester connecté</span>
+            </label>
+            <a routerLink="/pages/forgot-password-boxed" class="link-recover">Mot de passe oublié ?</a>
+          </div>
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="btn-primary"
+            [disabled]="!loginForm.valid"
+            [class.loading]="isLoading"
+          >
+            <span class="btn-text">Se connecter</span>
+            <span class="btn-loader"></span>
+          </button>
+        </form>
+
+        <!-- Footer -->
+        <footer class="card-footer">
+          <p class="footer-text">
+            Nouveau ici ? <a routerLink="/offres" class="link-register">Parcourir les offres et postuler</a>
+          </p>
+        </footer>
       </div>
-      <div class="text-center text-white opacity-8 mt-3">
-        Copyright © ArchitectUI 2019
-      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="login-footer">
+      <p> 2025 RGI — Tous droits réservés</p>
     </div>
   </div>
 </div>

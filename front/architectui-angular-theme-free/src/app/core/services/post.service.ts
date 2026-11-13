@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -7,7 +7,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class PostService {
-  private baseUrl = environment.apiUrl+'/api/posts';
+  private baseUrl = environment.apiUrl + '/api/posts';
+  private atsUrl = environment.apiUrl + '/api/ats';
 
   constructor(private http: HttpClient) {}
 
@@ -22,6 +23,7 @@ export class PostService {
   getAllPosts(): Observable<any[]> {
     return this.http.get<any[]>(this.baseUrl);
   }
+
   getPostById(postId: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/${postId}`);
   }
@@ -37,4 +39,18 @@ export class PostService {
   deletePost(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  compareCvsToPostByPostId(postId: string): Observable<AtsMatchResult[]> {
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ' + localStorage.getItem('token') // Adjust based on your auth mechanism
+    });
+    return this.http.get<AtsMatchResult[]>(`${this.atsUrl}/compare/post/${postId}`, { headers });
+  }
+}
+
+export interface AtsMatchResult {
+  userId: number;
+  candidateName: string;
+  matchScore: number;
+  matchDetails: { [key: string]: any };
 }

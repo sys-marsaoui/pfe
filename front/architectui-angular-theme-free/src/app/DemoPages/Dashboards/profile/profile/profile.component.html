@@ -1,49 +1,399 @@
-<div class="profile-container">
-    <h2>Candidate Profile</h2>
-    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
-      <!-- Username -->
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" formControlName="username" placeholder="Enter your username">
+<!-- src/app/profile/profile.component.html -->
+<div class="d-flex min-vh-100">
+  <!-- Sidebar -->
+  <app-sidebar-user [collapsed]="isSidebarCollapsed"></app-sidebar-user>
+
+  <!-- Toggle Button -->
+  <button class="sidebar-toggle" 
+          [class.collapsed]="isSidebarCollapsed"
+          (click)="toggleSidebar()"
+          title="Toggle Sidebar">
+    <i class="fas" [class.fa-chevron-right]="isSidebarCollapsed" [class.fa-chevron-left]="!isSidebarCollapsed"></i>
+  </button>
+
+  <!-- Main Content Area -->
+  <div class="main-content flex-grow-1" [class.expanded]="isSidebarCollapsed">
+    <div class="container-fluid py-4">
+      <div class="row">
+        <!-- Left Column - User Info & Upload -->
+        <div class="col-lg-4 mb-4">
+          <!-- User Profile Card -->
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body text-center">
+              <div class="avatar-circle mx-auto mb-3">
+                <i class="fas fa-user fa-3x text-primary"></i>
+              </div>
+              <h4 class="mb-1">{{ user.firstName }} {{ user.lastName }}</h4>
+              <p class="text-muted mb-3">{{ user.role }}</p>
+              <div class="text-start">
+                <div class="mb-2">
+                  <i class="fas fa-envelope text-primary me-2"></i>
+                  <small>{{ user.email }}</small>
+                </div>
+                <div class="mb-2" *ngIf="user.postId">
+                  <i class="fas fa-briefcase text-primary me-2"></i>
+                  <small>Post ID: {{ user.postId }}</small>
+                </div>
+              </div>
+              <!-- Start Quiz Button -->
+              <button *ngIf="isQuizAccepted" 
+                      class="btn btn-primary mt-3" 
+                      (click)="startQuiz()">
+                <i class="fas fa-play-circle me-2"></i>Start Quiz
+              </button>
+            </div>
+          </div>
+
+          <!-- CV Upload Card -->
+          <div class="card shadow-sm border-0" *ngIf="!cvData?.isValidated">
+            <div class="card-header bg-white border-0 pt-3">
+              <h6 class="mb-0"><i class="fas fa-upload me-2"></i>Upload CV</h6>
+            </div>
+            <div class="card-body">
+              <div class="upload-area mb-3" 
+                   [class.has-file]="selectedFile"
+                   (click)="fileInput.click()">
+                <input #fileInput type="file" class="d-none" 
+                       (change)="onFileSelected($event)" 
+                       accept=".pdf,.docx" 
+                       [disabled]="isLoading" />
+                <div class="text-center">
+                  <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-2"></i>
+                  <p class="mb-1" *ngIf="!selectedFile">Click to browse files</p>
+                  <p class="mb-1 text-primary" *ngIf="selectedFile">
+                    <i class="fas fa-file-alt me-1"></i>{{ selectedFile.name }}
+                  </p>
+                  <small class="text-muted">PDF or DOCX (Max 5MB)</small>
+                </div>
+              </div>
+              
+              <button type="button" 
+                      class="btn btn-primary w-100" 
+                      [disabled]="!selectedFile || isLoading" 
+                      (click)="uploadCv()">
+                <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+                <i *ngIf="!isLoading" class="fas fa-upload me-2"></i>
+                {{ isLoading ? 'Uploading...' : 'Upload CV' }}
+              </button>
+              
+              <div *ngIf="uploadMessage" 
+                   class="alert mt-3 mb-0"
+                   [ngClass]="{
+                     'alert-danger': uploadMessage.includes('Error') || uploadMessage.includes('expired'),
+                     'alert-success': uploadMessage.includes('successfully'),
+                     'alert-info': !uploadMessage.includes('Error') && !uploadMessage.includes('successfully') && !uploadMessage.includes('expired')
+                   }">
+                <small>{{ uploadMessage }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Content - CV Information -->
+        <div class="col-lg-8">
+          <div *ngIf="cvData; else noCvData">
+            <!-- Header Info Card -->
+            <div class="card shadow-sm border-0 mb-4">
+              <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">CV Information</h5>
+                <div *ngIf="!cvData.isValidated">
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="toggleEditMode()">
+                    <i class="fas fa-edit me-1"></i> {{ isEditMode ? 'Cancel' : 'Edit' }}
+                  </button>
+                  <button class="btn btn-sm btn-outline-info me-2" (click)="generateCvWithAi()" [disabled]="isGeneratingCv">
+                    <i class="fas fa-wand-magic-sparkles me-1"></i>
+                    {{ isGeneratingCv ? 'Génération…' : 'Améliorer avec Gemini' }}
+                  </button>
+                  <button class="btn btn-sm btn-outline-success me-2" (click)="validateCv()">
+                    <i class="fas fa-check me-1"></i> Validate
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteCv()">
+                    <i class="fas fa-trash me-1"></i> Delete
+                  </button>
+                </div>
+                <span *ngIf="cvData.isValidated" class="badge bg-success">Validated</span>
+              </div>
+              <div class="px-3 pt-2 text-muted small" *ngIf="!cvData.isValidated">
+                Gemini reçoit les informations de ce CV pour préparer un brouillon. Vérifiez le contenu avant validation.
+              </div>
+              <div class="card-body">
+                <form [formGroup]="cvForm" *ngIf="isEditMode; else displayMode">
+                  <!-- Basic Info -->
+                  <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                      <label class="form-label">Name</label>
+                      <input formControlName="name" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Email</label>
+                      <input formControlName="email" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Phone</label>
+                      <input formControlName="phone" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Address</label>
+                      <input formControlName="address" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">LinkedIn</label>
+                      <input formControlName="linkedin" class="form-control" />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">GitHub</label>
+                      <input formControlName="github" class="form-control" />
+                    </div>
+                  </div>
+
+                  <!-- Experiences -->
+                  <div class="mb-4">
+                    <h6>Experiences <button type="button" class="btn btn-sm btn-outline-primary" (click)="addExperience()">Add</button></h6>
+                    <div formArrayName="experiences">
+                      <div *ngFor="let exp of experiences.controls; let i = index" [formGroupName]="i" class="mb-3 border p-3 rounded">
+                        <div class="row g-3">
+                          <div class="col-12">
+                            <label class="form-label">Position</label>
+                            <input formControlName="position" class="form-control" />
+                          </div>
+                          <div class="col-12">
+                            <label class="form-label">Company</label>
+                            <input formControlName="company" class="form-control" />
+                          </div>
+                          <div class="col-12">
+                            <label class="form-label">Period</label>
+                            <input formControlName="period" class="form-control" />
+                          </div>
+                          <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea formControlName="description" class="form-control" rows="3"></textarea>
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" (click)="removeExperience(i)">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Projects -->
+                  <div class="mb-4">
+                    <h6>Projects <button type="button" class="btn btn-sm btn-outline-primary" (click)="addProject()">Add</button></h6>
+                    <div formArrayName="projects">
+                      <div *ngFor="let proj of projects.controls; let i = index" [formGroupName]="i" class="mb-3 border p-3 rounded">
+                        <div class="row g-3">
+                          <div class="col-12">
+                            <label class="form-label">Title</label>
+                            <input formControlName="title" class="form-control" />
+                          </div>
+                          <div class="col-12">
+                            <label class="form-label">Period</label>
+                            <input formControlName="period" class="form-control" />
+                          </div>
+                          <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea formControlName="description" class="form-control" rows="3"></textarea>
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" (click)="removeProject(i)">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Skills -->
+                  <div class="mb-4">
+                    <h6>Skills <button type="button" class="btn btn-sm btn-outline-primary" (click)="addSkill()">Add</button></h6>
+                    <div formArrayName="skills">
+                      <div *ngFor="let skill of skills.controls; let i = index" class="mb-2 d-flex align-items-center">
+                        <input [formControlName]="i" class="form-control me-2" />
+                        <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeSkill(i)">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Education -->
+                  <div class="mb-4">
+                    <h6>Education <button type="button" class="btn btn-sm btn-outline-primary" (click)="addEducation()">Add</button></h6>
+                    <div formArrayName="education">
+                      <div *ngFor="let edu of education.controls; let i = index" [formGroupName]="i" class="mb-3 border p-3 rounded">
+                        <div class="row g-3">
+                          <div class="col-12">
+                            <label class="form-label">Degree</label>
+                            <input formControlName="degree" class="form-control" />
+                          </div>
+                          <div class="col-12">
+                            <label class="form-label">Period</label>
+                            <input formControlName="period" class="form-control" />
+                          </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" (click)="removeEducation(i)">Remove</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn btn-primary" (click)="saveChanges()">Save Changes</button>
+                </form>
+
+                <ng-template #displayMode>
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <h3 class="mb-3">{{ cvData.name }}</h3>
+                      <div class="row g-3">
+                        <div class="col-md-6">
+                          <div class="info-item">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            <span>{{ cvData.email }}</span>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="info-item">
+                            <i class="fas fa-phone text-primary me-2"></i>
+                            <span>{{ cvData.phone }}</span>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="info-item">
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                            <span>{{ cvData.address }}</span>
+                          </div>
+                        </div>
+                        <div class="col-md-6" *ngIf="cvData.cvPath">
+                          <div class="info-item">
+                            <i class="fas fa-file-pdf text-primary me-2"></i>
+                            <span class="text-truncate" style="max-width: 200px;">CV Uploaded</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                      <a *ngIf="cvData.linkedin" 
+                         [href]="cvData.linkedin" 
+                         target="_blank" 
+                         class="btn btn-sm btn-outline-primary me-2 mb-2">
+                        <i class="fab fa-linkedin me-1"></i>LinkedIn
+                      </a>
+                      <a *ngIf="cvData.github" 
+                         [href]="cvData.github" 
+                         target="_blank" 
+                         class="btn btn-sm btn-outline-dark mb-2">
+                        <i class="fab fa-github me-1"></i>GitHub
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Experience Section -->
+                  <div class="card shadow-sm border-0 mb-4" *ngIf="cvData.experiences?.length">
+                    <div class="card-header bg-white border-0">
+                      <h5 class="mb-0">
+                        <i class="fas fa-briefcase text-primary me-2"></i>Experience
+                      </h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="timeline">
+                        <div class="timeline-item" *ngFor="let exp of cvData.experiences; let last = last">
+                          <div class="timeline-marker"></div>
+                          <div class="timeline-content" [class.mb-0]="last">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                              <div>
+                                <h6 class="mb-1">{{ exp.position }}</h6>
+                                <p class="text-primary mb-1">{{ exp.company || 'N/A' }}</p>
+                              </div>
+                              <span class="badge bg-light text-dark">{{ exp.period }}</span>
+                            </div>
+                            <p class="text-muted mb-0" *ngIf="exp.description">
+                              {{ exp.description }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Projects Section -->
+                  <div class="card shadow-sm border-0 mb-4" *ngIf="cvData.projects?.length">
+                    <div class="card-header bg-white border-0">
+                      <h5 class="mb-0">
+                        <i class="fas fa-project-diagram text-primary me-2"></i>Projects
+                      </h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="timeline">
+                        <div class="timeline-item" *ngFor="let proj of cvData.projects; let last = last">
+                          <div class="timeline-marker"></div>
+                          <div class="timeline-content" [class.mb-0]="last">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                              <h6 class="mb-1">{{ proj.title || 'Project' }}</h6>
+                              <span class="badge bg-light text-dark">{{ proj.period }}</span>
+                            </div>
+                            <p class="text-muted mb-0" *ngIf="proj.description">
+                              {{ proj.description }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Skills Section -->
+                  <div class="card shadow-sm border-0 mb-4" *ngIf="cvData.skills?.length">
+                    <div class="card-header bg-white border-0">
+                      <h5 class="mb-0">
+                        <i class="fas fa-code text-primary me-2"></i>Skills
+                      </h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="d-flex flex-wrap gap-2">
+                        <span *ngFor="let skill of cvData.skills" 
+                              class="badge bg-primary-subtle text-primary px-3 py-2">
+                          {{ skill }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Education Section -->
+                  <div class="card shadow-sm border-0 mb-4" *ngIf="cvData.education?.length">
+                    <div class="card-header bg-white border-0">
+                      <h5 class="mb-0">
+                        <i class="fas fa-graduation-cap text-primary me-2"></i>Education
+                      </h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="education-item" 
+                           *ngFor="let edu of cvData.education; let last = last"
+                           [class.mb-3]="!last">
+                        <div class="d-flex align-items-start">
+                          <div class="education-icon me-3">
+                            <i class="fas fa-university text-primary"></i>
+                          </div>
+                          <div>
+                            <h6 class="mb-1">{{ edu.degree }}</h6>
+                            <small class="text-muted" *ngIf="edu.period">{{ edu.period }}</small>
+                            <small class="text-muted" *ngIf="edu.year">{{ edu.year }}</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noCvData>
+            <div class="card shadow-sm border-0">
+              <div class="card-body text-center py-5">
+                <i class="fas fa-file-upload fa-4x text-muted mb-3"></i>
+                <h5 class="text-muted">No CV Data Available</h5>
+                <p class="text-muted">Importez un CV ou créez votre profil professionnel pour préparer votre candidature.</p>
+                <button class="btn btn-primary" (click)="beginCvCreation()">Créer mon CV à partir de mon profil</button>
+              </div>
+            </div>
+          </ng-template>
+        </div>
       </div>
-  
-      <!-- Email -->
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" formControlName="email" placeholder="Enter your email">
-      </div>
-  
-      <!-- Phone Number -->
-      <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
-        <input type="tel" id="phoneNumber" formControlName="phoneNumber" placeholder="Enter your phone number">
-      </div>
-  
-      <!-- LinkedIn Profile -->
-      <div class="form-group">
-        <label for="linkedin">LinkedIn Profile</label>
-        <input type="url" id="linkedin" formControlName="linkedin" placeholder="Enter your LinkedIn profile URL">
-      </div>
-  
-      <!-- Profile Picture Upload -->
-      <div class="form-group">
-        <label for="picture">Profile Picture</label>
-        <input type="file" id="picture" (change)="onFileChange($event, 'picture')" accept="image/*">
-      </div>
-  
-      <!-- Diploma Upload -->
-      <div class="form-group">
-        <label for="diploma">Diploma</label>
-        <input type="file" id="diploma" (change)="onFileChange($event, 'diploma')" accept=".pdf,.doc,.docx">
-      </div>
-  
-      <!-- CV Upload -->
-      <div class="form-group">
-        <label for="cv">Upload CV</label>
-        <input type="file" id="cv" (change)="onFileChange($event, 'cv')" accept=".pdf,.doc,.docx">
-      </div>
-  
-      <!-- Submit Button -->
-      <button type="submit" [disabled]="!profileForm.valid">Save Profile</button>
-    </form>
+    </div>
   </div>
+</div>
+
+<!-- Add Font Awesome if not already included -->
+<link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

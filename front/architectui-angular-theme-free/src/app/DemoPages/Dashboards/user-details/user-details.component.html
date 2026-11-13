@@ -1,0 +1,193 @@
+<div class="ud-container">
+  <div class="ud-wrapper">
+    <div *ngIf="error" class="ud-alert" role="alert" aria-live="polite">
+      <span class="ud-alert-text">{{ error }}</span>
+      <button type="button" class="ud-alert-close" (click)="error = null" aria-label="Close">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="ud-loading">
+      <div class="spinner-border text-primary" role="status" aria-label="Loading user details">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && user" class="ud-card">
+      <div class="ud-header">
+        <div class="ud-header-left">
+          <i class="lnr-user ud-header-icon" aria-hidden="true"></i>
+          <h1 class="ud-header-title">User Details</h1>
+        </div>
+        <div class="ud-header-actions">
+          <button class="ud-btn ud-btn-secondary" (click)="backToList()">
+            <i class="bi bi-arrow-left"></i>
+            <span class="ud-btn-text">Back</span>
+          </button>
+          <button class="ud-btn ud-btn-primary" (click)="editUser()">
+            <i class="bi bi-pencil"></i>
+            <span class="ud-btn-text">Edit</span>
+          </button>
+          <button *ngIf="cvData?.cvPath" class="ud-btn ud-btn-outline" (click)="downloadCv()" [disabled]="isDownloading">
+            <i class="bi bi-download"></i>
+            <span class="ud-btn-text">{{ isDownloading ? 'Downloading...' : 'Download CV' }}</span>
+          </button>
+          <button *ngIf="cvData?.cvPath" class="ud-btn ud-btn-outline" (click)="viewCv()" [disabled]="isViewing">
+            <i class="bi bi-eye"></i>
+            <span class="ud-btn-text">{{ isViewing ? 'Opening...' : 'View CV' }}</span>
+          </button>
+          <button 
+            *ngIf="postId && progress?.stage === 'CV_VERIFIED'"
+            class="ud-btn ud-btn-success"
+            (click)="acceptForQuiz()"
+            [disabled]="acceptingQuiz">
+            <i class="bi bi-check-circle"></i>
+            <span class="ud-btn-text">{{ acceptingQuiz ? 'Accepting…' : 'Accept for Quiz' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="ud-content">
+        <div class="ud-section ud-profile">
+          <div class="ud-avatar-wrapper">
+            <div class="ud-avatar">
+              <img [src]="user.avatarUrl" [alt]="'Photo of ' + user.firstName" *ngIf="user.avatarUrl" />
+              <div class="ud-avatar-placeholder" *ngIf="!user.avatarUrl">
+                {{ user.firstName?.charAt(0) || user.email?.charAt(0) || 'C' }}{{ user.lastName?.charAt(0) || '' }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="ud-profile-info">
+            <label class="ud-label">Full Name</label>
+            <div class="ud-value ud-value-lg">
+              {{ (user.firstName || user.lastName) ? (user.firstName + ' ' + (user.lastName || '')) : (user.email || 'Candidate #' + user.id) }}
+            </div>
+          </div>
+
+          <div class="ud-profile-info">
+            <label class="ud-label">Email</label>
+            <div class="ud-value">{{ user.email }}</div>
+          </div>
+
+          <div class="ud-timestamp">Last updated: {{ user.lastUpdated | date:'short' }}</div>
+        </div>
+
+        <div class="ud-section">
+          <h2 class="ud-section-title">Account Status</h2>
+          
+          <div class="ud-status-grid">
+            <div class="ud-status-item">
+              <span class="ud-status-label">Role</span>
+              <span class="ud-badge" [ngClass]="{
+                'ud-badge-success': user.role?.name === 'ADMIN',
+                'ud-badge-info': user.role?.name === 'CANDIDATE',
+                'ud-badge-secondary': user.role?.name === 'N/A'
+              }">
+                {{ user.role?.name || 'N/A' }}
+              </span>
+            </div>
+
+            <div class="ud-status-item">
+              <span class="ud-status-label">Enabled</span>
+              <span class="ud-badge" [ngClass]="user.enabled ? 'ud-badge-success' : 'ud-badge-danger'">
+                {{ user.enabled ? 'Yes' : 'No' }}
+              </span>
+            </div>
+
+            <div class="ud-status-item ud-status-full">
+              <div class="ud-progress-header">
+                <span class="ud-status-label">Progress</span>
+                <span class="ud-badge" [ngClass]="progress.percentage >= 50 ? 'ud-badge-success' : 'ud-badge-warning'">
+                  {{ progress.stage }} ({{ progress.percentage }}%)
+                </span>
+              </div>
+              <div class="ud-progress">
+                <div class="ud-progress-bar" [style.width.%]="progress.percentage"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ud-section">
+          <h2 class="ud-section-title">Personal Information</h2>
+          
+          <div class="ud-info-list">
+            <div class="ud-info-item">
+              <i class="bi bi-person ud-info-icon"></i>
+              <div class="ud-info-content">
+                <span class="ud-info-label">ID</span>
+                <span class="ud-info-value">{{ user.id }}</span>
+              </div>
+            </div>
+
+            <div class="ud-info-item">
+              <i class="bi bi-telephone ud-info-icon"></i>
+              <div class="ud-info-content">
+                <span class="ud-info-label">Phone</span>
+                <span class="ud-info-value">{{ user.tel || 'Not provided' }}</span>
+              </div>
+            </div>
+
+            <div class="ud-info-item">
+              <i class="bi bi-geo-alt ud-info-icon"></i>
+              <div class="ud-info-content">
+                <span class="ud-info-label">Address</span>
+                <span class="ud-info-value">{{ user.address || 'Not provided' }}</span>
+              </div>
+            </div>
+
+            <div class="ud-info-item">
+              <i class="bi bi-briefcase ud-info-icon"></i>
+              <div class="ud-info-content">
+                <span class="ud-info-label">Post</span>
+                <span class="ud-info-value">{{ postName }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ud-section">
+          <h2 class="ud-section-title">Account Details</h2>
+          
+          <div class="ud-info-list">
+            <div class="ud-info-item">
+              <i class="bi bi-shield-lock ud-info-icon"></i>
+              <div class="ud-info-content">
+                <span class="ud-info-label">Authorities</span>
+                <span class="ud-info-value">{{ (user.authorities && user.authorities[0]) ? user.authorities[0].authority : 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ud-section ud-status-full">
+          <h2 class="ud-section-title">CV du candidat</h2>
+          <ng-container *ngIf="cvData; else noCandidateCv">
+            <div class="ud-info-list">
+              <div class="ud-info-item"><div class="ud-info-content"><span class="ud-info-label">Nom sur le CV</span><span class="ud-info-value">{{ cvData.name }}</span></div></div>
+              <div class="ud-info-item"><div class="ud-info-content"><span class="ud-info-label">Contact</span><span class="ud-info-value">{{ cvData.email }} · {{ cvData.phone }}</span></div></div>
+              <div class="ud-info-item"><div class="ud-info-content"><span class="ud-info-label">Validation</span><span class="ud-badge" [ngClass]="cvData.isValidated ? 'ud-badge-success' : 'ud-badge-warning'">{{ cvData.isValidated ? 'Vérifié' : 'À vérifier' }}</span></div></div>
+              <div class="ud-info-item ud-status-full" *ngIf="cvData.skills?.length"><div class="ud-info-content"><span class="ud-info-label">Compétences</span><span class="ud-info-value">{{ cvData.skills.join(', ') }}</span></div></div>
+              <div class="ud-info-item ud-status-full" *ngFor="let experience of cvData.experiences"><div class="ud-info-content"><span class="ud-info-label">Expérience</span><span class="ud-info-value">{{ experience.position }} · {{ experience.company }} · {{ experience.period }}</span><small>{{ experience.description }}</small></div></div>
+              <div class="ud-info-item ud-status-full" *ngFor="let education of cvData.education"><div class="ud-info-content"><span class="ud-info-label">Formation</span><span class="ud-info-value">{{ education.degree || education.title || education.diploma }} · {{ education.institution || education.school || education.university }}</span><small>{{ education.period || education.year }}</small></div></div>
+              <div class="ud-info-item ud-status-full" *ngFor="let project of cvData.projects"><div class="ud-info-content"><span class="ud-info-label">Projet</span><span class="ud-info-value">{{ project.name || project.title }}</span><small>{{ project.description }}</small></div></div>
+            </div>
+          </ng-container>
+          <ng-template #noCandidateCv><p class="text-muted mb-0">Aucun CV enregistré.</p></ng-template>
+        </div>
+
+        <div class="ud-section ud-status-full">
+          <h2 class="ud-section-title">Historique de candidature</h2>
+          <div *ngIf="history.length; else noHistory" class="candidate-history">
+            <div class="candidate-history-item" *ngFor="let event of history">
+              <span class="candidate-history-dot"></span>
+              <div><strong>{{ event.description }}</strong><small class="d-block text-muted">{{ event.createdAt | date:'medium' }}</small></div>
+            </div>
+          </div>
+          <ng-template #noHistory><p class="text-muted mb-0">Aucun événement enregistré pour le moment.</p></ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

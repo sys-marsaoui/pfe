@@ -1,0 +1,120 @@
+<div class="container-fluid py-4 recruitment-dashboard">
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+    <div>
+      <h2 class="mb-1">Suivi du recrutement</h2>
+      <p class="text-muted mb-0">Candidatures, étapes et résultats par offre</p>
+    </div>
+    <button class="btn btn-outline-primary" (click)="loadDashboard()" [disabled]="loading">
+      <i class="bi bi-arrow-clockwise me-1"></i> Actualiser
+    </button>
+  </div>
+
+  <div *ngIf="error" class="alert alert-warning" role="alert">{{ error }}</div>
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Chargement</span></div>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-xl-3"><div class="stat-card"><span>Total des dossiers</span><strong>{{ kpis.total }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="stat-card success"><span>Retenus</span><strong>{{ kpis.accepted }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="stat-card warning"><span>En cours</span><strong>{{ kpis.pending }}</strong></div></div>
+      <div class="col-6 col-xl-3"><div class="stat-card danger"><span>Refusés</span><strong>{{ kpis.rejected }}</strong></div></div>
+    </div>
+
+    <div class="filter-card card mb-4">
+      <div class="card-body d-flex flex-wrap gap-3 align-items-end">
+        <div class="filter-field">
+          <label for="postFilter" class="form-label">Offre</label>
+          <select id="postFilter" class="form-select" [(ngModel)]="selectedPostId">
+            <option value="">Toutes les offres</option>
+            <option *ngFor="let post of posts" [value]="post.id">{{ post.title }}</option>
+          </select>
+        </div>
+        <div class="filter-field">
+          <label for="statusFilter" class="form-label">Statut</label>
+          <select id="statusFilter" class="form-select" [(ngModel)]="selectedStatus">
+            <option value="">Tous les statuts</option>
+            <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" (click)="loadDashboard()">Filtrer</button>
+        <button class="btn btn-outline-secondary" (click)="clearFilters()">Effacer</button>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-lg-7">
+        <section class="card h-100">
+          <div class="card-header bg-white"><h5 class="mb-0">Entonnoir de recrutement</h5></div>
+          <div class="card-body">
+            <div class="funnel-row" *ngFor="let stage of funnelData">
+              <div class="d-flex justify-content-between mb-1"><span>{{ stageLabel(stage.stage) }}</span><strong>{{ stage.count }}</strong></div>
+              <div class="progress"><div class="progress-bar" [style.width.%]="percent(stage.percentageFromTotal)" [attr.aria-valuenow]="stage.percentageFromTotal"></div></div>
+              <small class="text-muted">{{ stage.percentageFromTotal | number:'1.0-1' }} % des dossiers</small>
+            </div>
+            <p *ngIf="!funnelData.length" class="text-muted mb-0">Aucune donnée de parcours.</p>
+          </div>
+        </section>
+      </div>
+      <div class="col-lg-5">
+        <section class="card h-100">
+          <div class="card-header bg-white"><h5 class="mb-0">Répartition des scores</h5></div>
+          <div class="card-body">
+            <div class="score-row" *ngFor="let score of distributionData">
+              <strong>{{ score.range }}</strong>
+              <span>Quiz : {{ score.quizCount }}</span>
+              <span>ATS : {{ score.atsCount }}</span>
+              <span class="text-success">Retenus : {{ score.acceptedCount }}</span>
+            </div>
+            <p *ngIf="!distributionData.length" class="text-muted mb-0">Aucune donnée de score.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <section class="card mb-4">
+      <div class="card-header bg-white"><h5 class="mb-0">Performance par offre</h5></div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead><tr><th>Offre</th><th>Contrat</th><th>Dossiers</th><th>Retenus</th><th>Refusés</th><th>Quiz moyen</th><th>ATS moyen</th><th>Postes ouverts</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let job of jobStats">
+              <td>{{ job.title }}</td><td>{{ job.contractType || '—' }}</td><td>{{ job.totalApplicants }}</td>
+              <td>{{ job.accepted }}</td><td>{{ job.rejected }}</td>
+              <td>{{ job.avgQuizPercentage | number:'1.0-1' }} %</td><td>{{ job.avgAtsScore | number:'1.0-1' }} %</td><td>{{ job.openPositions }}</td>
+            </tr>
+            <tr *ngIf="!jobStats.length"><td colspan="8" class="text-center text-muted py-4">Aucune offre à afficher.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header bg-white d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Dossiers candidats</h5><span class="badge bg-primary">{{ candidates.length }}</span>
+      </div>
+      <div class="card-body border-bottom">
+        <label for="candidateSearch" class="form-label">Rechercher un candidat, un courriel ou une offre</label>
+        <input id="candidateSearch" class="form-control" [(ngModel)]="searchTerm" placeholder="Nom, courriel, offre…" />
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead><tr><th>Candidat</th><th>Offre</th><th>Statut</th><th>Étape</th><th>CV</th><th>ATS</th><th>Quiz</th><th></th></tr></thead>
+          <tbody>
+            <tr *ngFor="let candidate of filteredCandidates">
+              <td><strong>{{ candidate.fullName }}</strong><small class="d-block text-muted">{{ candidate.email }}</small></td>
+              <td>{{ candidate.postTitle }}</td><td><span class="badge bg-light text-dark">{{ candidate.status }}</span></td>
+              <td>{{ stageLabel(candidate.currentStage) }}</td>
+              <td><span [class.text-success]="candidate.cvValidated" [class.text-warning]="!candidate.cvValidated">{{ candidate.cvValidated ? 'Vérifié' : 'À vérifier' }}</span></td>
+              <td>{{ candidate.atsScore | number:'1.0-1' }} %</td>
+              <td>{{ candidate.quizScore }} / {{ candidate.totalQuizScore }} <small class="text-muted">({{ candidate.quizPercentage | number:'1.0-1' }} %)</small></td>
+              <td><button class="btn btn-sm btn-outline-primary" (click)="openCandidate(candidate)">Ouvrir le dossier</button></td>
+            </tr>
+            <tr *ngIf="!filteredCandidates.length"><td colspan="8" class="text-center text-muted py-4">Aucun candidat pour ces filtres.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </ng-container>
+</div>

@@ -1,101 +1,211 @@
-<div class="main-card mb-3 card">
-  <div class="card-header">
-    <div class="card-header-title font-size-lg text-capitalize fw-normal">
-      Suivi des candidatures
-    </div>    
+<div class="candidates-dashboard">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="dashboard-title">All Job Posts - Candidates Dashboard</h1>
+        <p class="dashboard-subtitle">Review every application. Only candidates who pass the quiz can be scheduled for an interview.</p>
+      </div>
+      <div class="stats-section">
+        <button class="btn btn-light" (click)="loadAllPostsCandidates()" [disabled]="loading">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button>
+      </div>
+    </div>
   </div>
-  <div class="table-responsive">
-    <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
-      <thead>
-        <tr>
-          <th class="text-center">Nom et Prénom</th>
-          <th class="text-center">Statut</th>
-          <th class="text-center">Résultat</th>
-          <th class="text-center">Target Achievement</th>
-          <th class="text-center">Date de passage</th>
-          <th class="text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let candidat of candidats">
-          <td class="text-center">{{ candidat.name }}</td>
-          <td class="text-center">{{ candidat.status }}</td>
-          <td class="text-center">{{ candidat.result }}</td>
 
-          <td class="text-center">
-            <div class="progress" style="height: 20px; width: 200px; margin: auto;">
-              <div
-                class="progress-bar"
-                role="progressbar"
-                [style.width.%]="candidat.target"
-                [ngClass]="{
-                  'bg-success': candidat.target >= 80,
-                  'bg-warning': candidat.target >= 50 && candidat.target < 80,
-                  'bg-danger': candidat.target < 50
-                }"
-                aria-valuenow="{{ candidat.target }}"
-                aria-valuemin="0"
-                aria-valuemax="100"
-              >
-                {{ candidat.target }}%
-              </div>
-            </div>
-          </td>
-          <td class="text-center">{{ candidat.dateP | date: 'dd MMM yyyy' }}</td>
-          <td class="text-center">
-            <button
-              class="btn-shadow btn btn-primary btn-sm"
-              [disabled]="candidat.target < 80"
-              (click)="open(content, candidat)"
-            >
-              Planifier un entretien
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Main Content -->
+  <div class="table-container">
+    <!-- Loading -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="errorMsg" class="alert alert-danger mx-3" role="alert">
+      <strong>Error:</strong> {{ errorMsg }}
+    </div>
+
+    <!-- Posts with Candidates -->
+    <div *ngIf="!loading && postsWithCandidates.length" class="posts-container">
+      <div class="post-section" *ngFor="let post of postsWithCandidates">
+        <!-- Post Header -->
+        <div class="post-header">
+          <div class="post-info">
+            <h3 class="post-title">{{ post.postName }}</h3>
+            <span class="badge bg-primary">
+              {{ post.candidates.length }} candidate{{ post.candidates.length !== 1 ? 's' : '' }}
+            </span>
+          </div>
+          <small class="text-muted" *ngIf="post.postDescription">
+            {{ post.postDescription }}
+          </small>
+        </div>
+
+        <!-- Candidates Table -->
+        <div class="table-responsive">
+          <table class="candidates-table">
+            <thead>
+              <tr>
+                <th class="candidate-name">Candidate</th>
+                <th class="contact-col">Contact</th>
+                <th class="scores-col">Scores</th>
+                <th class="status-col">Status</th>
+                <th class="date-col">Interview</th>
+                <th class="actions-col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="candidate-row" *ngFor="let c of post.candidates">
+                <!-- Candidate Info -->
+                <td class="candidate-info">
+                  <div class="candidate-avatar">
+                    {{ getCandidateInitials(c) }}
+                  </div>
+                  <div class="candidate-details">
+                    <div class="candidate-name">{{ getCandidateName(c) }}</div>
+                    <div class="candidate-email">{{ c.user?.address || 'Coordonnées incomplètes' }}</div>
+                  </div>
+                </td>
+
+                <!-- Contact -->
+                <td>
+                  <div>{{ c.user?.email || 'Email indisponible' }}</div>
+                  <small class="text-muted d-block">{{ c.user?.tel || 'Téléphone indisponible' }}</small>
+                </td>
+
+                <!-- Scores -->
+                <td>
+                  <div>Quiz: <strong>{{ c.quizScore || 0 }} / {{ c.totalQuizScore || 0 }}</strong></div>
+                  <div>ATS: <strong>{{ (c.atsScore || 0) | number:'1.2-2' }}</strong></div>
+                </td>
+
+                <!-- Status -->
+                <td class="status-cell">
+                  <span class="status-badge"
+                        [ngClass]="{
+                          'status-qualified': c.status === 'PASSED' || c.status === 'ACCEPTED',
+                          'status-rejected': c.status === 'REJECTED' || c.status === 'FAILED',
+                          'status-pending': c.status === 'PENDING' || c.status === 'INVITED' || c.status === 'InProgress'
+                        }">
+                    {{ c.status }}
+                  </span>
+                </td>
+
+                <!-- Interview Date -->
+                <td class="date-cell">
+                  <div class="date-display" *ngIf="c.interviewDateTime; else noInterview">
+                    <i class="bi bi-calendar-check"></i>
+                    {{ c.interviewDateTime | date:'medium' }}
+                  </div>
+                  <ng-template #noInterview>
+                    <em class="text-muted">—</em>
+                  </ng-template>
+                </td>
+
+                <!-- Actions -->
+                <td class="actions-cell">
+                  <button class="btn-interview btn-view"
+                          type="button"
+                          (click)="viewCandidate(c)"
+                          [disabled]="!c.userId"
+                          title="Voir le profil et le CV">
+                    <i class="bi bi-person-vcard"></i> Dossier
+                  </button>
+                  <button class="btn-interview btn-accept"
+                          (click)="openAcceptModal(acceptModal, c)"
+                          [disabled]="!canScheduleInterview(c) || c.status === 'ACCEPTED' || c.status === 'REJECTED'"
+                          [class.disabled]="!canScheduleInterview(c) || c.status === 'ACCEPTED' || c.status === 'REJECTED'">
+                    <i class="bi bi-check-circle"></i> Accept
+                  </button>
+                  <button class="btn-interview btn-reject"
+                          (click)="reject(c)"
+                          [disabled]="c.status === 'REJECTED'"
+                          [class.disabled]="c.status === 'REJECTED'">
+                    <i class="bi bi-x-circle"></i> Reject
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !postsWithCandidates.length" class="empty-state">
+      <i class="bi bi-inbox empty-icon"></i>
+      <h3>No candidates found</h3>
+      <p>No applications have been submitted for a job post yet.</p>
+    </div>
   </div>
 </div>
-<!-- Modal -->
-<ng-template #content let-c="close" let-d="dismiss">
+
+<!-- Accept Modal -->
+<ng-template #acceptModal let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Planification d'entretien</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+    <div class="modal-title-section">
+      <h5 class="modal-title">Schedule Interview</h5>
+      <p class="modal-subtitle">
+        {{ selectedCandidat ? getCandidateName(selectedCandidat) : '' }}
+      </p>
+    </div>
+    <button type="button" class="btn-close" (click)="modal.dismiss('cancel')"></button>
   </div>
   <div class="modal-body">
-    <form>
-      <div class="mb-3">
-        <label for="entretienDate" class="form-label">Date de l'entretien</label>
-        <input
-          type="date"
-          id="entretienDate"
-          class="form-control"
-          [(ngModel)]="selectedCandidat.entretienDate"
-          name="entretienDate"
-          required
-        />
+    <div class="candidate-summary">
+      <div class="summary-item">
+        <label>Offer:</label>
+        <span class="status-text">{{ getPostName(selectedCandidat?.postId) }}</span>
       </div>
-      <div class="mb-3">
-        <label for="entretienHeure" class="form-label">Heure de l'entretien</label>
-        <input
-          type="time"
-          id="entretienHeure"
-          class="form-control"
-          [(ngModel)]="selectedCandidat.entretienHeure"
-          name="entretienHeure"
-          required
-        />
+      <div class="summary-item">
+        <label>Quiz Score:</label>
+        <span class="score-badge" [ngClass]="getScoreClass(selectedCandidat?.quizScore, selectedCandidat?.totalQuizScore)">
+          {{ selectedCandidat?.quizScore || 0 }} / {{ selectedCandidat?.totalQuizScore || 0 }}
+        </span>
+      </div>
+    </div>
+
+    <form class="interview-form">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">
+              <i class="bi bi-calendar3 label-icon"></i> Date
+            </label>
+            <input class="form-control interview-date-input"
+                   type="date"
+                   [min]="minDateInput"
+                   [value]="formatInterviewDate()"
+                   (change)="onInterviewDateChange($event)"
+                   aria-label="Interview date">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">
+              <i class="bi bi-clock label-icon"></i> Time
+            </label>
+            <ngb-timepicker
+              [(ngModel)]="interviewTime"
+              [ngModelOptions]="{ standalone: true }"
+              [seconds]="false"
+              [minuteStep]="15">
+            </ngb-timepicker>
+          </div>
+        </div>
       </div>
     </form>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="c('Close click')">Annuler</button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="confirmerEntretien()"
-    >
-      Confirmer
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('cancel')">Cancel</button>
+    <button type="button"
+            class="btn btn-primary"
+            (click)="confirmAccept(); modal.close()"
+            [disabled]="!interviewDate || !interviewTime">
+      <i class="bi bi-check"></i> Confirm & Accept
     </button>
   </div>
 </ng-template>

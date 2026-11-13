@@ -2,11 +2,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PostService } from 'src/app/core/services/post.service';
+import { QuizService } from 'src/app/core/services/QuizService';
 
 @Component({
   selector: 'app-new-poste',
   templateUrl: './new-poste.component.html',
-  styleUrls: ['./new-poste.component.sass']
+  styleUrls: ['./new-poste.component.scss']
 })
 export class NewPosteComponent implements OnInit {
   @Input() post: any; // Données du poste pour la modification (null si création)
@@ -16,13 +17,17 @@ export class NewPosteComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private postService: PostService,
-    public activeModal: NgbActiveModal
+    public activeModal: NgbActiveModal,
+    private quizService: QuizService,
+    
   ) {
     this.postForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       contractType: ['', Validators.required],
-      nbrOpenPost: ['1', Validators.required],
+      nbrOpenPost: [1, [Validators.required, Validators.min(1)]],
+      expireDate: ['', Validators.required],
+
       quizId: [''], // Quiz associé
       responsibilities: this.fb.array([]) // Liste dynamique des responsabilités
     });
@@ -37,6 +42,7 @@ export class NewPosteComponent implements OnInit {
         title: this.post.title,
         description: this.post.description,
         contractType: this.post.contractType,
+        expireDate: this.post.expireDate,
         quizId: this.post.quizId
       });
 
@@ -49,7 +55,7 @@ export class NewPosteComponent implements OnInit {
 
   // Charger la liste des quiz depuis le backend
   loadQuizzes(): void {
-    this.postService.getAllPosts().subscribe(
+    this.quizService.getAllQuizzes().subscribe(
       (data) => {
         this.quizzes = data;
       },
@@ -80,16 +86,17 @@ export class NewPosteComponent implements OnInit {
   // Enregistrer ou mettre à jour le poste
   savePost(): void {
     const postData = {
-      ...this.postForm.value,
-      responsabilites: this.postForm.value.responsibilities.map((r: any) => r.responsibility)
-    };
+  ...this.postForm.value,
+  responsabilites: this.postForm.value.responsibilities.map((r: any) => r.responsibility),
+  expireDate: this.postForm.value.expireDate
+};
 
     if (this.post) {
       // Mode mise à jour
       this.postService.updatePost(this.post.id, postData).subscribe(
         (response) => {
           console.log('Post mis à jour avec succès:', response);
-          this.activeModal.close(response); // Fermer le modal avec succès
+          this.activeModal.close(response); 
         },
         (error) => {
           console.error('Erreur lors de la mise à jour:', error);
@@ -112,5 +119,6 @@ export class NewPosteComponent implements OnInit {
   // Fermer le modal
   closeModal(): void {
     this.activeModal.dismiss();
+    this.loadQuizzes();
   }
 }

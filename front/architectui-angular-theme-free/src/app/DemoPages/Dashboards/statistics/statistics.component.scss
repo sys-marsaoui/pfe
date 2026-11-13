@@ -1,0 +1,45 @@
+.card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.badge {
+  font-size: 0.8em;
+}
+
+.recruitment-dashboard {
+  color: #1f2937;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 112px;
+  justify-content: space-between;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid #e5e7eb;
+  border-left: 4px solid #2563eb;
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+
+  span { color: #6b7280; font-size: .9rem; }
+  strong { color: #111827; font-size: 1.8rem; line-height: 1; }
+  &.success { border-left-color: #16a34a; }
+  &.warning { border-left-color: #d97706; }
+  &.danger { border-left-color: #dc2626; }
+}
+
+.filter-card, .recruitment-dashboard .card {
+  border: 1px solid #e5e7eb;
+  border-radius: .75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+}
+
+.filter-field { min-width: 220px; }
+.funnel-row { margin-bottom: 1.1rem; }
+.funnel-row:last-child { margin-bottom: 0; }
+.funnel-row .progress { height: .65rem; margin-bottom: .3rem; }
+.score-row { display: flex; flex-wrap: wrap; gap: .5rem 1rem; padding: .8rem 0; border-bottom: 1px solid #f1f5f9; }
+.score-row:last-child { border-bottom: 0; }
+.score-row strong { min-width: 74px; }
+.recruitment-dashboard .table { min-width: 850px; }

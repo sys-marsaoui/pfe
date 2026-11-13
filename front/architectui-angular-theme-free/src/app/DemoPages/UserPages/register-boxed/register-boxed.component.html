@@ -1,117 +1,127 @@
-<div class="h-100 bg-plum-plate bg-animation">
-  <div class="d-flex h-100 justify-content-center align-items-center">
-    <div class="mx-auto app-login-box col-md-8">
-      <div class="app-logo mx-auto mb-3"></div>
-      <div class="modal-dialog w-100">
-        <div class="modal-content">
-          <form (ngSubmit)="createUser()">
-            <div class="modal-body">
-              <h5 class="modal-title">
-                <h4 class="mt-2">
-                  <div>Welcome,</div>
-                  <span>It only takes a <span class="text-success">few seconds</span> to create your account</span>
-                </h4>
-              </h5>
-              <div class="divider"></div>
+<div class="h-100 bg-gradient">
+  <div class="app-login-box">
+    <div class="text-center">
+      <div class="app-logo mx-auto mb-4"></div>
+    </div>
 
-              <!-- Email Field -->
-              <div id="exampleInputGroup1" role="group" aria-describedby="exampleInputGroup1__BV_description_" class="mb-3">
-                <div>
-                  <input id="email" name="email" type="email" placeholder="Enter email..." [(ngModel)]="userCredentials.email" required="required"
-                    aria-required="true" class="form-control">
-                  <small tabindex="-1" id="exampleInputGroup1__BV_description_" class="form-text text-muted">
-                    We'll never share your email with anyone else.
-                  </small>
-                </div>
+    <form (ngSubmit)="createUser()" id="registerForm">
+      <!-- Two Cards -->
+      <div class="register-two-columns">
+        <!-- Left Card: Personal Info -->
+        <div class="register-card">
+          <div class="card-header">Personal Information</div>
+          <div class="card-body">
+            <div class="modern-input-group">
+              <label for="email" class="modern-label">Email Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                <input id="email" name="email" type="email" placeholder="Enter email..."
+                  [(ngModel)]="userCredentials.email" required class="form-control modern-input">
               </div>
-
-              <!-- Username Field -->
-              <div id="exampleInputGroup12" role="group" class="mb-3">
-                <div>
-                  <input id="userName" name="userName" type="text" placeholder="Enter username..." [(ngModel)]="userCredentials.userName" required="required"
-                    aria-required="true" class="form-control">
-                </div>
-              </div>
-              <!-- First Name -->
-              <div id="exampleInputGroup13" role="group" class="mb-3">
-                <div>
-                  <input id="firstName" name="firstName" type="text" placeholder="Enter first name..." [(ngModel)]="userCredentials.firstName" required="required"
-                    aria-required="true" class="form-control">
-                </div>
-              </div>
-
-              <!-- Last Name -->
-              <div id="exampleInputGroup14" role="group" class="mb-3">
-                <div>
-                  <input id="lastName" name="lastName" type="text" placeholder="Enter last name..." [(ngModel)]="userCredentials.lastName" required="required"
-                    aria-required="true" class="form-control">
-                </div>
-              </div>
-
-              <!-- Address -->
-              <div id="exampleInputGroup15" role="group" class="mb-3">
-                <div>
-                  <input id="address" name="address" type="text" placeholder="Enter address..." [(ngModel)]="userCredentials.address" required="required"
-                    aria-required="true" class="form-control">
-                </div>
-              </div>
-
-              <!-- Telephone -->
-              <div id="exampleInputGroup16" role="group" class="mb-3">
-                <div>
-                  <input id="tel" name="tel" type="tel" placeholder="Enter telephone number..." [(ngModel)]="userCredentials.tel" required="required"
-                    aria-required="true" class="form-control">
-                </div>
-              </div>
-
-              <!-- Password Fields -->
-              <div class="row">
-                <div class="col-md-6">
-                  <div id="exampleInputGroup2" role="group" class="mb-3">
-                    <div>
-                      <input id="password" name="password" type="password" placeholder="Enter password..." [(ngModel)]="userCredentials.password" required="required"
-                        aria-required="true" class="form-control">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div id="exampleInputGroup2" role="group" class="mb-3">
-                    <div>
-                      <input id="repeatpassword" name="repeatpassword" type="password" placeholder="Repeat password..." [(ngModel)]="userCredentials.repeatpassword" required="required"
-                        aria-required="true" class="form-control">
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Terms and Conditions -->
-              <div class="custom-control custom-checkbox form-check">
-                <input id="exampleCheck" type="checkbox" name="check" (change)="true" autocomplete="off" class="form-check-input" value="true">
-                <label for="exampleCheck" class="form-label form-check-label">
-                  Accept our <a>Terms and Conditions</a>.
-                </label>
-              </div>
-              <div class="divider"></div>
-              <h6 class="mb-0">
-                Already have an account?
-                <a class="text-primary">Sign in</a>
-                |
-                <a class="text-primary">Recover Password</a>
-              </h6>
+              <small class="form-text text-muted">We'll never share your email.</small>
             </div>
 
-            <!-- Submit Button -->
-            <div class="modal-footer d-block text-center">
-              <button type="submit" class="btn btn-wide btn-pill btn-shadow btn-hover-shine btn-secondary btn-lg">
-                Create Account
-              </button>
+            <div class="modern-input-group">
+              <label for="userName" class="modern-label">Username</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                <input id="userName" name="userName" type="text" placeholder="Enter username..."
+                  [(ngModel)]="userCredentials.userName" required class="form-control modern-input">
+              </div>
             </div>
-          </form>
+
+            <div class="modern-input-group">
+              <label for="firstName" class="modern-label">First Name</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                <input id="firstName" name="firstName" type="text" placeholder="Enter first name..."
+                  [(ngModel)]="userCredentials.firstName" required class="form-control modern-input">
+              </div>
+            </div>
+
+            <div class="modern-input-group">
+              <label for="lastName" class="modern-label">Last Name</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                <input id="lastName" name="lastName" type="text" placeholder="Enter last name..."
+                  [(ngModel)]="userCredentials.lastName" required class="form-control modern-input">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Card: Contact & Security -->
+        <div class="register-card">
+          <div class="card-header">Contact & Security</div>
+          <div class="card-body">
+            <div class="modern-input-group">
+              <label for="address" class="modern-label">Address</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-home"></i></span>
+                <input id="address" name="address" type="text" placeholder="Enter address..."
+                  [(ngModel)]="userCredentials.address" required class="form-control modern-input">
+              </div>
+            </div>
+
+            <div class="modern-input-group">
+              <label for="tel" class="modern-label">Telephone</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                <input id="tel" name="tel" type="tel" placeholder="Enter telephone number..."
+                  [(ngModel)]="userCredentials.tel" required class="form-control modern-input">
+              </div>
+            </div>
+
+            <div class="modern-input-group">
+              <label for="password" class="modern-label">Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                <input id="password" name="password" type="password" placeholder="Enter password..."
+                  [(ngModel)]="userCredentials.password" required class="form-control modern-input">
+              </div>
+            </div>
+
+            <div class="modern-input-group">
+              <label for="repeatpassword" class="modern-label">Repeat Password</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                <input id="repeatpassword" name="repeatpassword" type="password" placeholder="Repeat password..."
+                  [(ngModel)]="userCredentials.repeatpassword" required class="form-control modern-input">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="text-center text-white opacity-8 mt-3">
-        RGI Tunis 2024
+
+      <!-- Bottom Section -->
+      <div class="register-bottom-section">
+        <div class="modern-checkbox-wrapper">
+          <input id="exampleCheck" type="checkbox" class="modern-checkbox" required>
+          <label for="exampleCheck" class="modern-checkbox-label">
+            Accept our <a href="#">Terms and Conditions</a>.
+          </label>
+        </div>
+
+        <div *ngIf="error" class="alert alert-danger mb-3">{{ error }}</div>
+        <div *ngIf="!post" class="text-center mb-3">
+          <a routerLink="/offres">Choisir une offre avant de créer un compte</a>
+        </div>
+
+        <div class="text-center mb-3 modern-signup-text">
+          Already have an account?
+          <a [routerLink]="['/login']" class="modern-signup-link">Sign In</a> |
+          <a [routerLink]="['/pages/forgot-password-boxed']" class="modern-signup-link">Recover Password</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100 modern-login-btn" [disabled]="loading">
+          <span *ngIf="loading">Creating Account...</span>
+          <span *ngIf="!loading">Create Account</span>
+        </button>
       </div>
+    </form>
+
+    <div class="text-center text-white opacity-8 mt-3">
+      RGI Tunis 2025
     </div>
   </div>
 </div>

@@ -1,0 +1,25 @@
+<!-- src/app/shared/sidebar/sidebar-user.component.html -->
+<div class="sidebar bg-dark text-white" [class.collapsed]="collapsed">
+  <div class="sidebar-header p-4 text-center border-bottom border-secondary">
+    <div class="avatar-circle-small mx-auto mb-2">
+      <i class="fas fa-user fa-2x"></i>
+    </div>
+    <h6 class="mb-0 sidebar-text">{{ user.firstName }} {{ user.lastName }}</h6>
+    <small class="text-muted sidebar-text">{{ user.role }}</small>
+  </div>
+  
+  <nav class="sidebar-nav p-3">
+    <a routerLink="/profile" class="nav-item" [class.active]="router.url === '/profile'">
+      <i class="fas fa-user me-3"></i>
+      <span class="sidebar-text">Profile</span>
+    </a>
+    <a routerLink="/status" class="nav-item" [class.active]="router.url === '/status'">
+      <i class="fas fa-chart-line me-3"></i>
+      <span class="sidebar-text">Status</span>
+    </a>
+    <a href="#" class="nav-item text-danger" (click)="logout()">
+      <i class="fas fa-sign-out-alt me-3"></i>
+      <span class="sidebar-text">Logout</span>
+    </a>
+  </nav>
+</div>

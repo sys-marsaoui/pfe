@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ThemeOptions } from '../../../../../theme-options';
 import { AuthService } from 'src/app/core/services/auth-service';
 import { Router } from '@angular/router';
@@ -7,26 +7,30 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-user-box',
   templateUrl: './user-box.component.html',
+  styleUrls: ['./user-box.component.scss']
 })
-export class UserBoxComponent implements OnInit {
+export class UserBoxComponent {
+  userAvatar = './assets/images/avatars/1.jpg'; // Change selon ton besoin
 
   constructor(
     public globals: ThemeOptions,
-    private authService: AuthService, // Injection de AuthService
-    private router: Router,           // Injection de Router
-    private toastr: ToastrService     // Injection de ToastrService
-  ) { }
-
-  ngOnInit() { }
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
-  
-  logout() {
-    // Appel de la fonction logout dans AuthService
+
+  get userName(): string {
+    const user = this.authService.getUserDetails();
+    return [user.firstName, user.lastName].filter(Boolean).join(' ') || 'Utilisateur';
+  }
+
+  logout(): void {
     this.authService.logout();
-    this.toastr.success('Logged out successfully'); // Notification de déconnexion
-    this.router.navigate(['/login']); // Redirection vers la page de login
+    this.toastr.success('Déconnexion réussie');
+    this.router.navigate(['/login']);
   }
 }
