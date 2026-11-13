@@ -45,16 +45,17 @@
   </div>
 
   <!-- Bouton pour passer le test -->
-  <div class="text-center d-block p-3 card-footer"  *ngIf="user.role === 'CONDIDATE'">
+  <div class="text-center d-block p-3 card-footer" *ngIf="user.role === 'CANDIDATE' && user.postId === post.id">
     <button
-      *ngIf="!userAnswer && post.quizId "
+      *ngIf="!hasPassedQuiz && post.quizId"
       class="btn-pill btn-shadow btn-wide fsize-1 btn btn-primary btn-lg"
       [routerLink]="['/quiz', post.quizId]"
+      [queryParams]="{ postId: post.id }"
     >
       <span class="me-2 opacity-7">
         <i class="icon icon-anim-pulse ion-ios-paper-plane-outline"></i>
       </span>
-      Passer le test en ligne
+      {{ userAnswer ? 'Repasser le test en ligne' : 'Passer le test en ligne' }}
     </button>
 
       <span class="me-2 opacity-7"  *ngIf="userAnswer">
@@ -64,6 +65,25 @@
   </div>
 </div>
 
-<ng-container *ngIf="post && user.role != 'CONDIDATE'">
+<div *ngIf="post && user.role === 'CANDIDATE' && !user.postId" class="text-center p-3 card-footer">
+  <p>Complétez et validez votre CV depuis votre profil, puis postulez à cette offre avec ce CV.</p>
+  <a class="btn btn-outline-primary me-2" routerLink="/profile">Compléter mon CV</a>
+  <button class="btn btn-primary" [disabled]="isApplying" (click)="applyWithCv()">
+    {{ isApplying ? 'Envoi…' : 'Postuler avec mon CV validé' }}
+  </button>
+  <div *ngIf="applicationMessage" class="alert alert-info mt-3 mb-0">{{ applicationMessage }}</div>
+</div>
+
+<div *ngIf="post && user.role === 'CANDIDATE' && user.postId === post.id" class="alert alert-success mt-3">
+  Votre candidature à cette offre est enregistrée.
+</div>
+
+<div *ngIf="post && !user.role" class="text-center p-3 card-footer">
+  <a class="btn btn-primary btn-lg" [routerLink]="['/register']" [queryParams]="{ post: post.id }">
+    Créer un compte et postuler
+  </a>
+</div>
+
+<ng-container *ngIf="post && user.role === 'ADMIN'">
   <app-result-table-candidat [postId]="post?.id"></app-result-table-candidat>
 </ng-container>

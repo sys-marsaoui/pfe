@@ -1,41 +1,81 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { jwtDecode } from 'jwt-decode';
-import {ToastrService} from 'ngx-toastr'
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/core/services/auth-service';
+
+interface Credentials {
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'app-login-boxed',
   templateUrl: './login-boxed.component.html',
-  styles: []
+  styleUrls: ['./login-boxed.component.scss']
 })
+export class LoginBoxedComponent {
+  credentials: Credentials = { email: '', password: '' };
+  focused = { email: false, password: false };
+  showPassword = false;
+  rememberMe = false;
+  isLoading = false;
 
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {}
 
-export class LoginBoxedComponent implements OnInit {
-  credentiels={
-    email:'',
-    password:''
+  onFocus(field: 'email' | 'password'): void {
+    this.focused[field] = true;
   }
-  postId :string;
-  constructor( private authService: AuthService,private router:Router,private toastService:ToastrService) { }
-  
-  ngOnInit() {
+
+  onBlur(field: 'email' | 'password'): void {
+    this.focused[field] = false;
   }
-  connect(){
-this.authService.Auth(this.credentiels).subscribe((response)=>{
-  if(response.code==200&&response.token!=null){
-      this.authService.saveToken(response.token)
-      this.toastService.success('Connected')
-      this.postId = jwtDecode(localStorage.getItem('auth_token'))['user']?.postId;
-      if(jwtDecode(localStorage.getItem('auth_token'))['user']?.role ==="CONDIDATE"){
-        this.router.navigateByUrl('detaille-poste/'+ this.postId);
-      }else {
-        this.router.navigateByUrl('postes');
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  connect(): void {
+    if (!this.credentials.email || !this.credentials.password) {
+      this.toastr.error('Veuillez remplir tous les champs');
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.authService.Auth(this.credentials).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+        if (response?.code === '200' && response.token && response.refreshToken) {
+          const user = this.authService.getUserDetails();
+          const role = user?.role;
+
+          this.toastr.success('Connexion réussie !');
+
+          if (role === 'ADMIN') {
+            this.router.navigate(['/postes']);
+          } else if (role === 'CANDIDATE') {
+            this.router.navigate(['/profile']);
+          } else {
+            this.toastr.warning('Rôle inconnu, redirection par défaut');
+            this.router.navigate(['/']);
+          }
+        } else {
+          this.toastr.error(response?.code === '400'
+            ? 'Identifiants incorrects'
+            : 'Le serveur a renvoyé une réponse de connexion invalide.');
+        }
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Login error:', err);
+        this.toastr.error(err.status === 0
+          ? 'Impossible de joindre le serveur. Vérifiez que le backend est démarré.'
+          : 'Erreur du serveur pendant la connexion.');
       }
-  }else{
-    this.toastService.error("Bad Credentiels")
-  }
-})    
+    });
   }
 }
-

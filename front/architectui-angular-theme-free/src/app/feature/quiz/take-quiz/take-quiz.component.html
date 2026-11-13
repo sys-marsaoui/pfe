@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <h5 class="modal-title">Passer le Quiz: {{ quiz?.title }}</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<div class="modal-body">
+  <div *ngIf="loading">Chargement du quiz...</div>
+  <div *ngIf="!loading && quiz">
+    <form [formGroup]="quizForm" (ngSubmit)="submitQuiz()">
+      <div *ngFor="let question of quiz.questions; let i = index" class="mb-4">
+        <h6>Question {{ i + 1 }}: {{ question.text }} ({{ question.points }} points, {{ question.time }} sec)</h6>
+        <div *ngFor="let option of question.options; let j = index" class="form-check">
+          <input
+            type="radio"
+            class="form-check-input"
+            [id]="'option-' + i + '-' + j"
+            [name]="'question-' + question.id"
+            [value]="option.id"
+            formControlName="questionAnswers"
+          />
+          <label class="form-check-label" [for]="'option-' + i + '-' + j">
+            {{ option.text }}
+          </label>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success" [disabled]="quizForm.invalid">Soumettre</button>
+    </form>
+  </div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Annuler</button>
+</div>

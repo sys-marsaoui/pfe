@@ -1,0 +1,427 @@
+/* ===================================
+   LOGIN PAGE – PREMIUM GLASS + NEUMORPHISM (COMPACT)
+   =================================== */
+
+$primary: #6366f1;
+$primary-dark: #4f46e5;
+$accent: #a78bfa;
+$text: #1e293b;
+$text-light: #64748b;
+$bg: #eef2ff;
+$card-bg: rgba(255, 255, 255, 0.85);
+$glass: rgba(255, 255, 255, 0.25);
+$shadow: 0 25px 50px rgba(99, 102, 241, 0.15);
+$transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+
+.login-scene {
+  min-height: 100vh;
+  background: $bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-family: 'Inter', system-ui, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated Blobs */
+.bg-blobs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: float 15s ease-in-out infinite;
+
+    &-1 {
+      width: 500px;
+      height: 500px;
+      background: $primary;
+      top: -15%;
+      left: -15%;
+      animation-delay: 0s;
+    }
+
+    &-2 {
+      width: 400px;
+      height: 400px;
+      background: $accent;
+      bottom: -10%;
+      right: -10%;
+      animation-delay: -7s;
+    }
+
+    &-3 {
+      width: 300px;
+      height: 300px;
+      background: #c4b5fd;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: -3s;
+    }
+  }
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 440px;
+  z-index: 10;
+}
+
+/* Brand */
+.login-brand {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: fadeInDown 0.8s ease;
+
+  .brand-logo {
+    height: 60px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+    transition: $transition;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      transform: translateY(-4px) scale(1.04);
+      box-shadow: 0 12px 30px rgba(99, 102, 241, 0.35);
+    }
+  }
+
+  .brand-name {
+    margin: 0.75rem 0 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: $text;
+    letter-spacing: -0.5px;
+  }
+}
+
+/* Login Card */
+.login-card {
+  background: $card-bg;
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: $shadow;
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.card-inner {
+  padding: 1.75rem;
+}
+
+/* Header */
+.card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+
+  .title {
+    margin: 0 0 0.375rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, $primary, $primary-dark);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $text-light;
+    font-weight: 500;
+  }
+}
+
+/* Input Field */
+.input-field {
+  position: relative;
+  margin-bottom: 1.125rem;
+
+  &.focused .input-underline,
+  &.filled .input-underline {
+    transform: scaleX(1);
+  }
+
+  &.focused .input-label,
+  &.filled .input-label {
+    top: 0.375rem;
+    font-size: 0.6875rem;
+    color: $primary;
+  }
+
+  &.focused .input-icon i {
+    color: $primary;
+  }
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $text-light;
+  font-size: 1.125rem;
+  transition: $transition;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.input-control {
+  width: 100%;
+  padding: 1.25rem 1rem 0.75rem 3rem;
+  font-size: 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #cbd5e1;
+  outline: none;
+  transition: $transition;
+  color: $text;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:focus {
+    border-color: $primary;
+  }
+}
+
+.input-label {
+  position: absolute;
+  left: 3rem;
+  top: 1.25rem;
+  font-size: 1rem;
+  color: $text-light;
+  pointer-events: none;
+  transition: $transition;
+  font-weight: 500;
+}
+
+.input-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: $primary;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.4s ease;
+}
+
+/* Password Toggle */
+.password-toggle {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: $text-light;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover {
+    color: $primary;
+  }
+}
+
+/* Options */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+.neumorphic-checkbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .checkmark {
+    width: 20px;
+    height: 20px;
+    background: #f1f5f9;
+    border-radius: 6px;
+    margin-right: 0.75rem;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    transition: $transition;
+    position: relative;
+
+    &::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      color: white;
+      font-weight: bold;
+      transition: $transition;
+    }
+  }
+
+  input:checked ~ .checkmark {
+    background: $primary;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+
+    &::after {
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  .label-text {
+    font-weight: 500;
+    color: $text;
+  }
+}
+
+.link-recover {
+  color: $primary;
+  text-decoration: none;
+  font-weight: 600;
+  transition: $transition;
+
+  &:hover {
+    color: $primary-dark;
+  }
+}
+
+/* Button */
+.btn-primary {
+  position: relative;
+  width: 100%;
+  padding: 1rem;
+  margin: 1rem 0;
+  background: linear-gradient(135deg, $primary, $primary-dark);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  overflow: hidden;
+  transition: $transition;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+
+  .btn-text {
+    transition: $transition;
+  }
+
+  .btn-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    opacity: 0;
+    transition: $transition;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.4);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &.loading {
+    .btn-text { opacity: 0; }
+    .btn-loader {
+      opacity: 1;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+/* Footer */
+.card-footer {
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #e2e8f0;
+
+  .footer-text {
+    margin: 0;
+    font-size: 0.9375rem;
+    color: $text-light;
+  }
+
+  .link-register {
+    color: $primary;
+    font-weight: 600;
+    text-decoration: none;
+    transition: $transition;
+
+    &:hover {
+      color: $primary-dark;
+      text-decoration: underline;
+    }
+  }
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 3rem;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(8deg); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-wrapper { padding: 1rem; }
+  .card-inner { padding: 1.5rem 1.25rem; }
+  .brand-logo { height: 50px; }
+  .title { font-size: 1.375rem; }
+}

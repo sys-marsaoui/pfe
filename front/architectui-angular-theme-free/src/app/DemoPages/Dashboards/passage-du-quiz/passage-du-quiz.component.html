@@ -1,39 +1,164 @@
-<app-page-title [heading]="quiz.title" [subheading]="'Nombre de questions : ' + questions.length" [icon]="'pe-7s-study'"></app-page-title>
-
-<div class="col-md-8 mx-auto">
-  <div class="card">
-    <div class="card-header text-center">
-      <h4>{{ quiz.title }}</h4>
-      <small>Nombre de questions : {{ questions.length }}</small>
+<div class="quiz-container">
+  <!-- Quiz Header -->
+  <div class="quiz-header">
+    <div class="container">
+      <h2 class="quiz-title">{{ quiz.title }}</h2>
+      <div class="quiz-meta">
+        <span class="badge badge-info">{{ quiz.level }}</span>
+        <span class="ml-2">{{ questions.length }} questions</span>
+      </div>
     </div>
-    <div class="card-body">
-      <div class="carousel-wrapper">
-        <ngb-carousel *ngIf="questions.length > 0" [interval]="0" class="quiz-carousel">
-          <!-- Affichage des questions -->
-          <ng-template ngbSlide *ngFor="let question of questions; let i = index">
-            <div class="question-container p-3">
-              <h5 class="mb-3 text-center">Question {{ i + 1 }}: {{ question.text }}</h5>
+  </div>
 
-              <!-- Boutons radio -->
-              <div>
-                <div *ngFor="let option of question.options" class="form-check">
-                  <input
-                    type="radio"
-                    class="form-check-input"
-                    [name]="'question' + i"
-                    [value]="option.id"
-                    (change)="updateAnswer(i, option.id)"
-                  />
-                  <label class="form-check-label">{{ option.text }}</label>
-                </div>
-              </div>
+  <!-- Start Screen -->
+  <div *ngIf="!isQuizStarted && !isQuizFinished" class="container mt-4">
+    <div class="card moodle-card">
+      <div class="card-body text-center p-5">
+        <h3 class="mb-4">Prêt à commencer le quiz?</h3>
+        <p class="text-muted mb-4">Ce quiz contient {{ questions.length }} questions.</p>
+        <p class="text-muted mb-4">Chaque question a un temps limité. Vous ne pourrez pas revenir en arrière après avoir avancé ou si le temps expire.</p>
+        <button class="btn btn-primary btn-lg" (click)="startQuiz()" [disabled]="questions.length === 0">
+          <i class="fas fa-play mr-2"></i>Commencer le quiz
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Content -->
+  <div *ngIf="isQuizStarted && !isQuizFinished && questions.length > 0" class="container-fluid mt-4">
+    <div class="row">
+      <!-- Sidebar - Question Navigation -->
+      <div class="col-md-3">
+        <div class="card moodle-card navigation-panel">
+          <div class="card-header">
+            <h5>Navigation du quiz</h5>
+          </div>
+          <div class="card-body">
+            <div class="question-nav-grid">
+              <button
+                *ngFor="let question of questions; let i = index"
+                class="question-nav-btn"
+                [class.active]="i === currentQuestionIndex"
+                [class.answered]="questionStatus[i] === 'answered'"
+                [class.expired]="questionStatus[i] === 'expired'"
+                [class.pending]="questionStatus[i] === 'pending'"
+                [disabled]="questionStatus[i] === 'expired' || questionStatus[i] === 'answered'"
+                (click)="goToQuestion(i)"
+                [title]="
+                  questionStatus[i] === 'expired' ? 'Temps écoulé' :
+                  questionStatus[i] === 'answered' ? 'Répondu' :
+                  questionStatus[i] === 'pending' ? 'Non visité' : 'En cours'
+                ">
+                {{ i + 1 }}
+                <small class="d-block" *ngIf="questionTimers[i] > 0 && questionStatus[i] !== 'active'">
+                  {{ formatTime(questionTimers[i]) }}
+                </small>
+              </button>
             </div>
-          </ng-template>
-        </ngb-carousel>
+            <div class="mt-3">
+              <button class="btn btn-success btn-block" (click)="submitQuiz()">
+                <i class="fas fa-check mr-2"></i>Soumettre tout et terminer
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Bouton Soumettre -->
-      <button class="btn btn-success mt-3 w-100" (click)="submitQuiz()">Soumettre</button>
+      <!-- Main Content -->
+      <div class="col-md-9">
+        <!-- Timer Bar -->
+        <div class="card moodle-card mb-3 timer-card">
+          <div class="card-body p-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Question {{ currentQuestionIndex + 1 }} de {{ questions.length }}</strong>
+              </div>
+              <div class="timer" [class.timer-warning]="timeRemaining <= 30" [class.timer-danger]="timeRemaining <= 10">
+                <i class="fas fa-clock mr-2"></i>
+                <span class="timer-text">{{ formatTime(timeRemaining) }}</span>
+              </div>
+            </div>
+            <div class="progress mt-2" style="height: 8px;">
+              <div class="progress-bar" [style.width.%]="getProgressPercentage()"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="card moodle-card question-card">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Question {{ currentQuestionIndex + 1 }}</h5>
+              <div>
+                <span class="badge badge-primary">{{ questions[currentQuestionIndex].points }} points</span>
+                <span class="badge badge-secondary ml-2">{{ questions[currentQuestionIndex].technology }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="question-text mb-4">
+              <p class="h5">{{ questions[currentQuestionIndex].text }}</p>
+            </div>
+
+            <!-- Options -->
+            <div class="options-container">
+              <div
+                *ngFor="let option of questions[currentQuestionIndex].options; let j = index"
+                class="option-item"
+                [class.selected]="getSelectedAnswerForCurrentQuestion() === option.id">
+                <label class="option-label">
+                  <input
+                    type="radio"
+                    [name]="'question' + currentQuestionIndex"
+                    [value]="option.id"
+                    [checked]="getSelectedAnswerForCurrentQuestion() === option.id"
+                    (change)="updateAnswer(currentQuestionIndex, option.id)"
+                    class="option-radio" />
+                  <span class="option-letter">{{ String.fromCharCode(65 + j) }}</span>
+                  <span class="option-text">{{ option.text }}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-between">
+              <button
+                class="btn btn-outline-secondary"
+                (click)="previousQuestion()"
+                [disabled]="currentQuestionIndex === 0">
+                <i class="fas fa-chevron-left mr-2"></i>Précédent
+              </button>
+              <button
+                class="btn btn-primary"
+                (click)="nextQuestion()"
+                *ngIf="currentQuestionIndex < questions.length - 1">
+                Suivant<i class="fas fa-chevron-right ml-2"></i>
+              </button>
+              <button
+                class="btn btn-success"
+                (click)="submitQuiz()"
+                *ngIf="currentQuestionIndex === questions.length - 1">
+                <i class="fas fa-check mr-2"></i>Terminer
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Screen -->
+  <div *ngIf="isQuizFinished" class="container mt-4">
+    <div class="card moodle-card">
+      <div class="card-body text-center p-5">
+        <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+        <h3 class="mt-3">Quiz terminé!</h3>
+        <p class="text-muted">Vos réponses ont été soumises avec succès.</p>
+        <p class="text-muted">Redirection en cours...</p>
+        <div class="spinner-border text-primary mt-3" role="status">
+          <span class="sr-only">Chargement...</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>

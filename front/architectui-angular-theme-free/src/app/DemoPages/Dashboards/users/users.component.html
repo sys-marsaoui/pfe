@@ -1,0 +1,240 @@
+<div class="users-page">
+  <div class="users-container">
+    <!-- Header -->
+    <div class="users-header">
+      <div class="header-left">
+        <h1 class="page-title">Users Management</h1>
+        <p class="page-subtitle">Manage and monitor all system users</p>
+      </div>
+      <div class="header-actions">
+        <div class="search-box">
+          <i class="bi bi-search search-icon"></i>
+          <input 
+            class="search-input" 
+            [(ngModel)]="searchTerm"
+            placeholder="Search users..." 
+            type="text" />
+        </div>
+        <button *ngIf="loading" class="btn-refresh" disabled>
+          <span class="spinner-sm"></span>
+          Loading...
+        </button>
+        <button *ngIf="!loading" class="btn-refresh" (click)="loadUsers()">
+          <i class="bi bi-arrow-clockwise"></i>
+          Refresh
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="error" class="alert-error">
+      <i class="bi bi-exclamation-circle"></i>
+      {{ error }}
+      <button class="alert-close" (click)="error = null">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <!-- Users Table -->
+    <div class="users-table-wrapper">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th class="sortable" (click)="sort('firstName')">
+              Name
+              <i *ngIf="sortConfig.active === 'firstName'" 
+                 class="bi" 
+                 [ngClass]="sortConfig.direction === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            </th>
+            <th class="sortable" (click)="sort('email')">
+              Contact
+              <i *ngIf="sortConfig.active === 'email'" 
+                 class="bi" 
+                 [ngClass]="sortConfig.direction === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            </th>
+            <th class="sortable" (click)="sort('postName')">
+              Post
+              <i *ngIf="sortConfig.active === 'postName'" 
+                 class="bi" 
+                 [ngClass]="sortConfig.direction === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            </th>
+            <th class="sortable text-center" (click)="sort('role')">
+              Role
+              <i *ngIf="sortConfig.active === 'role'" 
+                 class="bi" 
+                 [ngClass]="sortConfig.direction === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            </th>
+            <th class="sortable text-center" (click)="sort('progress')">
+              Stage
+              <i *ngIf="sortConfig.active === 'progress'" 
+                 class="bi" 
+                 [ngClass]="sortConfig.direction === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            </th>
+            <th class="sortable text-center" (click)="sort('matchScore')">
+              Score
+              <i *ngIf="sortConfig.active === 'matchScore'" 
+                 class="bi" 
+                 [ngClass]="sortConfig.direction === 'asc' ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+            </th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredAndSortedUsers; trackBy: trackByUserId" 
+              class="user-row" 
+              (click)="viewUser(user.id)">
+            <!-- Name -->
+            <td>
+              <div class="user-info">
+                <div class="user-avatar">
+                  {{ user.firstName?.charAt(0).toUpperCase() }}{{ user.lastName?.charAt(0).toUpperCase() }}
+                </div>
+                <div class="user-details">
+                  <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Contact -->
+            <td>
+              <div class="contact-info">
+                <div class="email">{{ user.email }}</div>
+                <div class="phone">{{ user.tel || '—' }}</div>
+              </div>
+            </td>
+
+            <!-- Post -->
+            <td>
+              <span class="post-name">{{ user.postName || 'N/A' }}</span>
+            </td>
+
+            <!-- Role -->
+            <td class="text-center">
+              <span class="role-badge" 
+                    [ngClass]="{
+                      'role-admin': user.role?.name === 'ADMIN',
+                      'role-candidate': user.role?.name === 'CANDIDATE',
+                      'role-default': !user.role?.name || user.role?.name === 'N/A'
+                    }">
+                {{ user.role?.name || 'N/A' }}
+              </span>
+            </td>
+
+            <!-- Stage -->
+            <td class="text-center">
+              <div class="stage-info">
+                <span class="stage-badge" 
+                      [ngClass]="{
+                        'stage-high': user.progress?.percentage >= 70,
+                        'stage-medium': user.progress?.percentage >= 40 && user.progress?.percentage < 70,
+                        'stage-low': user.progress?.percentage < 40
+                      }">
+                  {{ user.progress?.stage || 'N/A' }}
+                </span>
+                <div class="progress-bar">
+                  <div class="progress-fill" 
+                       [style.width.%]="user.progress?.percentage || 0"
+                       [ngClass]="{
+                         'fill-high': user.progress?.percentage >= 70,
+                         'fill-medium': user.progress?.percentage >= 40 && user.progress?.percentage < 70,
+                         'fill-low': user.progress?.percentage < 40
+                       }"></div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Score -->
+            <td class="text-center">
+              <span class="score-badge">
+                {{ user.matchScore != null ? (user.matchScore | number:'1.1-1') : '—' }}
+              </span>
+            </td>
+
+            <!-- Actions -->
+            <td class="text-center">
+              <button class="btn-action" (click)="$event.stopPropagation(); showAtsMatches(user)">
+                <i class="bi bi-eye"></i>
+                ATS
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredAndSortedUsers.length === 0 && !loading" class="empty-state">
+        <i class="bi bi-people empty-icon"></i>
+        <h3>No users found</h3>
+        <p>Try adjusting your search criteria</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ATS Matches Modal -->
+<div *ngIf="selectedUser" class="modal-overlay" (click)="closeAtsModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">ATS Matches</h3>
+        <p class="modal-subtitle">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</p>
+      </div>
+      <button class="modal-close" (click)="closeAtsModal()">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Loading -->
+      <div *ngIf="atsLoading" class="loading-state">
+        <span class="spinner-sm"></span>
+        Loading matches...
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="atsError" class="alert-error">
+        <i class="bi bi-exclamation-circle"></i>
+        {{ atsError }}
+      </div>
+
+      <!-- Empty -->
+      <div *ngIf="!atsLoading && atsMatches.length === 0 && !atsError" class="empty-state-modal">
+        <i class="bi bi-inbox"></i>
+        <p>No ATS matches found</p>
+      </div>
+
+      <!-- Matches List -->
+      <div *ngFor="let match of atsMatches" class="match-card">
+        <div class="match-header">
+          <span class="match-id">Match #{{ match.id }}</span>
+          <span class="match-score">{{ match.matchScore | number:'1.2-2' }}%</span>
+        </div>
+        <div class="match-details">
+          <div class="detail-row">
+            <span class="detail-label">Post ID:</span>
+            <span class="detail-value">{{ match.postId }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Created:</span>
+            <span class="detail-value">{{ match.createdAt | date:'short' }}</span>
+          </div>
+          <div class="detail-row skills-row">
+            <span class="detail-label">Skills:</span>
+            <div class="skills-list">
+              <span *ngFor="let skill of match.matchDetails?.matchedSkills" class="skill-tag">
+                {{ skill }}
+              </span>
+              <span *ngIf="!match.matchDetails?.matchedSkills?.length" class="text-muted">
+                No skills matched
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeAtsModal()">Close</button>
+    </div>
+  </div>
+</div>

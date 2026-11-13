@@ -1,57 +1,112 @@
-<div class="main-card mb-3 card">
-    <div class="card-header">
-      <ul class="list-group">
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <label for="technology" class="form-label">Technology</label>
-          <select id="technology" multiple class="form-select">
-            <option value="" disabled selected>Aucune technology</option>
-            <option *ngFor="let technology of technologies" [value]="technology">{{ technology.name }}</option>
-          </select>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <label for="Level" class="form-label">Difficulter</label>
-      <select id="Level" class="form-select" formControlName="level">
-        <option value="" disabled selected>Choisir la difficulter</option>
-        <option value="JUNIOR">Junior</option>
-        <option value="CONFIRMED">Comfirme</option>
-        <option value="SENIOR">Sinior</option>
-        <option value="EXPERT">Expert</option>
-      </select>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <button class="btn btn-primary float-end" (click)="openCreateQuizModal()">Créer un Quiz</button>
-        </li>
-      </ul>
+<div class="ql-wrapper">
+  <!-- Filters Bar -->
+  <div class="ql-filters">
+    <div class="ql-filters-left">
+      <div class="ql-filter-item">
+        <label class="ql-label">Technologies</label>
+        <select 
+          multiple 
+          class="ql-multi-select" 
+          [(ngModel)]="selectedTechnologies"
+          (change)="applyFilters()">
+          <option *ngFor="let technology of technologies" [value]="technology.id">
+            {{ technology.name }}
+          </option>
+        </select>
+      </div>
       
+      <div class="ql-filter-item">
+        <label class="ql-label">Difficulty Level</label>
+        <select 
+          class="ql-select"
+          [(ngModel)]="selectedLevel"
+          (change)="applyFilters()">
+          <option value="">All Levels</option>
+          <option value="JUNIOR">Junior</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="SENIOR">Senior</option>
+          <option value="EXPERT">Expert</option>
+        </select>
+      </div>
+
+      <button class="ql-btn-reset" (click)="resetFilters()" title="Reset filters">
+        <i class="bi bi-x-circle"></i>
+      </button>
+    </div>
+
+    <div class="ql-filters-right">
+      <button class="ql-btn-create" (click)="openCreateQuizModal()">
+        <i class="bi bi-plus-lg"></i>
+        <span>New Quiz</span>
+      </button>
     </div>
   </div>
-  <div class="main-card mb-3 card">
-    <div class="table-responsive">
-      <table class="align-middle text-truncate mb-0 table table-borderless table-hover">
-        <thead>
-        <tr >
-          <th class="text-center">title</th>
-          <th class="text-center">level</th>
-          <th class="text-center">number of question</th>
-          <th class="text-center">Time</th>
-          <th class="text-center">Technology</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let quiz of quizzes">
-          <td class="text-center" style="width: 80px;">{{ quiz?.title }}</td>
-          <td class="text-center" style="width: 100px;">{{ quiz?.level }}</td>
-          <td class="text-center" style="width: 100px;">{{ quiz?.questions?.length }}</td>
-          <td class="text-center">{{calculateQuizTime(quiz)}} sec</td>
-          <td class="text-center" *ngFor="let tech of extractQuizTechnologies(quiz)">
-            <div class="badge rounded-pill bg-danger">{{tech}}</div>
-          </td>
-          <td>
-            <button class="btn btn-warning btn-sm me-2">Détails</button>
-            <button class="btn btn-danger btn-sm" (click)="deleteQuiz(quiz.id)">Supprimer</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+
+  <!-- Results Header -->
+  <div class="ql-results-header">
+    <h1 class="ql-title">Quiz Collection</h1>
+    <div class="ql-results-count">
+      <span class="ql-count-number">{{ filteredQuizzes.length }}</span>
+      <span class="ql-count-label">{{ filteredQuizzes.length === 1 ? 'quiz' : 'quizzes' }}</span>
     </div>
   </div>
+
+  <!-- Quiz Grid -->
+  <div class="ql-grid" *ngIf="filteredQuizzes.length > 0">
+    <div class="ql-quiz-card" *ngFor="let quiz of filteredQuizzes">
+      <div class="ql-quiz-header">
+        <h3 class="ql-quiz-title">{{ quiz?.title }}</h3>
+        <span [class]="'ql-level-badge ' + getLevelBadgeClass(quiz?.level)">
+          {{ quiz?.level }}
+        </span>
+      </div>
+
+      <div class="ql-quiz-stats">
+        <div class="ql-stat">
+          <i class="bi bi-question-circle"></i>
+          <span>{{ quiz?.questions?.length || 0 }} questions</span>
+        </div>
+        <div class="ql-stat">
+          <i class="bi bi-clock"></i>
+          <span>{{ calculateQuizTime(quiz) }}s</span>
+        </div>
+      </div>
+
+      <div class="ql-quiz-techs">
+        <span 
+          *ngFor="let tech of extractQuizTechnologies(quiz)" 
+          class="ql-tech-pill">
+          {{ tech?.name }}
+        </span>
+      </div>
+
+      <div class="ql-quiz-actions">
+        <button 
+          class="ql-action-btn ql-action-view" 
+          (click)="viewQuizDetails(quiz.id)">
+          <i class="bi bi-eye"></i>
+          <span>View</span>
+        </button>
+        <button 
+          class="ql-action-btn ql-action-delete" 
+          (click)="deleteQuiz(quiz.id)">
+          <i class="bi bi-trash3"></i>
+          <span>Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="ql-empty" *ngIf="filteredQuizzes.length === 0">
+    <div class="ql-empty-icon">
+      <i class="bi bi-inbox"></i>
+    </div>
+    <h3 class="ql-empty-title">No Quizzes Found</h3>
+    <p class="ql-empty-text">Try adjusting your filters or create a new quiz to get started</p>
+    <button class="ql-btn-create" (click)="openCreateQuizModal()">
+      <i class="bi bi-plus-lg"></i>
+      <span>Create First Quiz</span>
+    </button>
+  </div>
+</div>

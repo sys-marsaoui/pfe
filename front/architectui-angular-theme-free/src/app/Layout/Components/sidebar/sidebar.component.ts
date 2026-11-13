@@ -8,20 +8,19 @@ import { TokenDecoder } from 'src/app/shared/utils/jwt.util';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
   public extraParameter: any;
 
-  constructor(public globals: ThemeOptions, private activatedRoute: ActivatedRoute, private tokenDecoder: TokenDecoder) {
-
-  }
+  constructor(public globals: ThemeOptions, private activatedRoute: ActivatedRoute, private tokenDecoder: TokenDecoder) {}
 
   @select('config') public config$: Observable<any>;
 
   private newInnerWidth: number;
   private innerWidth: number;
   activeId = 'dashboardsMenu';
-  isCondidate = false;
+  isAdmin = false;
 
   toggleSidebar() {
     this.globals.toggleSidebar = !this.globals.toggleSidebar;
@@ -38,9 +37,8 @@ export class SidebarComponent implements OnInit {
         this.globals.toggleSidebar = true;
       }
     });
-    this.isCondidate = this.tokenDecoder.getUser().role === "CONDIDATE"
+    this.isAdmin = this.tokenDecoder.getUser().role === 'ADMIN';
     this.extraParameter = this.activatedRoute.snapshot.firstChild.data.extraParameter;
-
   }
 
   @HostListener('window:resize', ['$event'])
@@ -52,6 +50,5 @@ export class SidebarComponent implements OnInit {
     } else {
       this.globals.toggleSidebar = false;
     }
-
   }
 }

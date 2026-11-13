@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./candidature.component.sass']
 })
 export class CandidatureComponent implements OnInit {
-  heading = 'RGI Tunis';
+  heading = 'Up to dev';
   subheading = 'We re Hiring! Come And Join Us To Build Your Dream.';
   icon = 'pe-7s-graph text-success';
 

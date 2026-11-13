@@ -16,6 +16,11 @@ export class TokenDecoder {
 
   getUser(): any{
     const token = localStorage.getItem('auth_token');
-    return this.getDecodedAccessToken(token).user;
+    if (!token) {
+      return {};
+    }
+
+    const decoded = this.getDecodedAccessToken(token);
+    return decoded && decoded.user ? decoded.user : {};
   }
 }

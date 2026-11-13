@@ -1,0 +1,120 @@
+/* ===================================
+   USER BOX – LIGHT & MODERN
+   =================================== */
+
+.header-user {
+  display: flex;
+  align-items: center;
+}
+
+.user-dropdown {
+  position: relative;
+}
+
+.user-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #1e293b;
+
+  &:hover {
+    background: #f1f5f9;
+  }
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+  transition: border-color 0.3s ease;
+
+  .user-toggle:hover & {
+    border-color: #6366f1;
+  }
+}
+
+.user-name {
+  font-size: 0.9375rem;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #1e293b;
+}
+
+.user-chevron {
+  font-size: 0.875rem;
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.user-toggle[aria-expanded="true"] .user-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  min-width: 200px;
+  padding: 0.5rem 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  background: white;
+  margin-top: 0.5rem;
+  animation: fadeIn 0.2s ease;
+
+  button[ngbDropdownItem] {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    color: #1e293b;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f8fafc;
+      color: #6366f1;
+
+      i { color: #6366f1; }
+    }
+
+    i {
+      font-size: 1rem;
+      width: 20px;
+      text-align: center;
+      color: #64748b;
+    }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background: #e2e8f0;
+    margin: 0.5rem 0;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .user-name {
+    display: none;
+  }
+}

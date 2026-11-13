@@ -1,0 +1,239 @@
+/* ===================================
+   SIDEBAR – LIGHT & MODERN (FIXED + NO SASS ERROR)
+   =================================== */
+
+$app-sidebar-width: 15rem;        // 240px
+$app-sidebar-collapsed: 4rem;     // 64px
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+.app-sidebar {
+  --bg: #ffffff;
+  --bg-hover: #f8fafc;
+  --text: #1e293b;
+  --text-light: #64748b;
+  --accent: #6366f1;
+  --border: #e2e8f0;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: $app-sidebar-width;
+  background: var(--bg);
+  color: var(--text);
+  z-index: 1000;
+  transition: $transition;
+  box-shadow: var(--shadow);
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+  border-right: 1px solid var(--border);
+
+  &.collapsed {
+    width: $app-sidebar-collapsed;
+
+    .logo-text,
+    .nav-text {
+      opacity: 0;
+      visibility: hidden;
+      width: 0;
+      padding: 0;
+      margin: 0;
+    }
+
+    .nav-link {
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    .sidebar-header {
+      padding: 1rem 0.75rem;
+    }
+  }
+
+  &:hover {
+    .logo-text,
+    .nav-text {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+/* Hamburger Toggle – LIGHT */
+.sidebar-toggle {
+  position: fixed;
+  top: 1rem;
+  left: calc(#{$app-sidebar-collapsed} + 1rem);
+  z-index: 1001;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: $transition;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+  .bar {
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: $transition;
+  }
+
+  &.active {
+    left: calc(#{$app-sidebar-width} - 22px);
+    border-color: var(--accent);
+    background: #eef2ff;
+
+    .bar:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+      background: var(--accent);
+    }
+    .bar:nth-child(2) {
+      opacity: 0;
+    }
+    .bar:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+      background: var(--accent);
+    }
+  }
+
+  &:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent);
+  }
+}
+
+/* Header / Logo */
+.sidebar-header {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+  transition: $transition;
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+
+    i {
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .logo-text {
+      opacity: 1;
+      transition: opacity 0.2s ease;
+    }
+  }
+}
+
+/* Navigation */
+.sidebar-nav {
+  padding: 1rem 0;
+  flex: 1;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  margin-bottom: 0.25rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 1rem;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 0.5rem;
+  margin: 0 0.75rem;
+  transition: $transition;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+
+  i {
+    font-size: 1.125rem;
+    width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+    color: var(--text-light);
+  }
+
+  .nav-text {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  &:hover {
+    background: var(--bg-hover);
+    color: var(--text);
+
+    i {
+      color: var(--accent);
+    }
+  }
+
+  &.active {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+
+    i {
+      color: white;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .app-sidebar {
+    width: $app-sidebar-collapsed;
+
+    &.collapsed {
+      width: $app-sidebar-collapsed;
+    }
+
+    .logo-text,
+    .nav-text {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover {
+      width: $app-sidebar-width;
+      .logo-text,
+      .nav-text {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+
+  .sidebar-toggle {
+    left: calc(#{$app-sidebar-collapsed} + 1rem);
+  }
+
+  .sidebar-toggle.active {
+    left: calc(#{$app-sidebar-width} - 22px);
+  }
+}

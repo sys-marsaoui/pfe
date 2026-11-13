@@ -1,50 +1,76 @@
-<div *ngIf="!isCondidate" [class]="'app-sidebar sidebar-shadow ' + (config$ | async).sidebarTheme" (mouseover)="sidebarHover()"
-     (mouseout)="sidebarHover()">
-  <div class="app-header__logo"
-  >
-    <div class="header__pane ms-auto">
-      <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
-              [ngClass]="{'is-active' : globals.toggleSidebar}" (click)="toggleSidebar()">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-      </button>
+<button 
+  class="sidebar-toggle" 
+  [class.active]="!globals.toggleSidebar" 
+  (click)="toggleSidebar()"
+  *ngIf="isAdmin">
+  <span class="bar"></span>
+  <span class="bar"></span>
+  <span class="bar"></span>
+</button>
+
+<aside 
+  class="app-sidebar" 
+  [class.collapsed]="globals.toggleSidebar"
+  (mouseenter)="sidebarHover()" 
+  (mouseleave)="sidebarHover()"
+  *ngIf="isAdmin">
+
+  <div class="sidebar-header">
+    <div class="logo">
+      <i class="bi bi-briefcase"></i>
+      <span class="logo-text">HR Pro</span>
     </div>
   </div>
-  <div class="app-sidebar-content">
-    <div class="app-sidebar-scroll">
-      <perfect-scrollbar [autoPropagation]="true">
-        <div class="v-sidebar-menu vsm-default">
-          <div class="vsm-list">
-            <ngb-accordion [destroyOnHide]="false" [closeOthers]="true" [activeIds]="extraParameter">
-              <ngb-panel>
-                <ng-template ngbPanelHeader>
-                  <div class="vsm-header">Main Navigation</div>
-                </ng-template>
-              </ngb-panel>
-              <ngb-panel id="dashboardsMenu">
-                <ng-template ngbPanelHeader>
-                  <button ngbPanelToggle routerLink="postes" routerLinkActive="active-item"
-                  [routerLinkActiveOptions]="{exact: true}" class="vsm-link">
-                    <i class="vsm-icon pe-7s-rocket"></i>
-                    <span class="vsm-title">Postes</span>
-                  </button>
-                  <button ngbPanelToggle routerLink="quizList" routerLinkActive="active-item"
-                  [routerLinkActiveOptions]="{exact: true}" class="vsm-link">
-                    <i class="vsm-icon pe-7s-rocket"></i>
-                    <span class="vsm-title">Quiz</span>
-                  </button>
-                  <button ngbPanelToggle routerLink="candidats" routerLinkActive="active-item"
-                  [routerLinkActiveOptions]="{exact: true}" class="vsm-link">
-                    <i class="vsm-icon pe-7s-rocket"></i>
-                    <span class="vsm-title">Condidat</span>
-                  </button>
-                </ng-template>
-              </ngb-panel>
-            </ngb-accordion>
-          </div>
-        </div>
-      </perfect-scrollbar>
-    </div>
-  </div>
-</div>
+
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
+      <li class="nav-item">
+        <a 
+          routerLink="/postes" 
+          routerLinkActive="active" 
+          [routerLinkActiveOptions]="{exact: true}"
+          class="nav-link">
+          <i class="bi bi-briefcase"></i>
+          <span class="nav-text">Job Posts</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a 
+          routerLink="/quizList" 
+          routerLinkActive="active"
+          class="nav-link">
+          <i class="bi bi-clipboard-check"></i>
+          <span class="nav-text">Quizzes</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a 
+          routerLink="/candidats" 
+          routerLinkActive="active"
+          class="nav-link">
+          <i class="bi bi-person-badge"></i>
+          <span class="nav-text">Candidates</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a 
+          routerLink="/users" 
+          routerLinkActive="active"
+          class="nav-link">
+          <i class="bi bi-people"></i>
+          <span class="nav-text">Users</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a routerLink="/statistics" routerLinkActive="active" class="nav-link">
+          <i class="bi bi-bar-chart-line"></i>
+          <span class="nav-text">Recruitment statistics</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>

@@ -1,7 +1,17 @@
-<div class="search-wrapper" [class.active]="isActive">
-  <div class="input-holder">
-    <input type="text" placeholder="Type to search" class="search-input">
-    <button class="search-icon" (click)="isActive = true"><span></span></button>
+<div class="header-search" [class.active]="isActive">
+  <div class="search-input-wrapper">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Rechercher..."
+      (focus)="isActive = true"
+      (blur)="onBlur()"
+    />
+    <button class="search-btn" (click)="isActive = true">
+      <i class="bi bi-search"></i>
+    </button>
   </div>
-  <button class="btn-close" (click)="isActive = false"></button>
+  <button class="search-close" (click)="isActive = false" *ngIf="isActive">
+    <i class="bi bi-x-lg"></i>
+  </button>
 </div>

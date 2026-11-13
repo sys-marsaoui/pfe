@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration=",
-    "build": "ng build",
-    "test": "ng test",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng serve",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng build",
+    "test": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng test",
+    "test:ci": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng test --watch=false --browsers=ChromeHeadless --include=src/app/feature/poste/result-table-candidat/result-table-candidat.component.spec.ts",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -37,7 +38,7 @@
     "font-awesome": "^4.7.0",
     "jwt-decode": "^4.0.0",
     "lodash-es": "^4.17.21",
-    "ng2-charts": "^2.4.2",
+    "ng2-charts": "^2.4.3",
     "ngx-perfect-scrollbar": "^10.1.0",
     "ngx-toastr": "^13.2.1",
     "pe7-icon": "^1.0.4",
